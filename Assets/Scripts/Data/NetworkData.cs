@@ -40,7 +40,7 @@ public class LocomotiveType
 public class LocomotiveInventory
 {
     public int id;
-    public Item[] items;
+    public MyInventoryItemView5284984894[] items;
 }
 
 [System.Serializable]
@@ -63,7 +63,7 @@ public class CarriageType
 public class CarriageInventory
 {
     public int id;
-    public Item[] items;
+    public MyInventoryItemView5284984894[] items;
 }
 
 [System.Serializable]
@@ -104,11 +104,11 @@ public class CharacterParametersExperience
 public class CharacterInventory
 {
     public int id;
-    public Item[] items;
+    public MyInventoryItemView5284984894[] items;
 }
 
 [System.Serializable]
-public class Item
+public class MyInventoryItemView5284984894
 {
     public int id;
     public string name;

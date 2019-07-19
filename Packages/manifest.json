@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "com.unity.2d.tilemap.extras": "file:G:/Games/Projects/Decay Station/Client/Android/Decay Station/2d-extras-package",
+    "com.unity.2d.tilemap.extras": "file:D:/Project Hydra/Decay_Station_Android/2d-extras-package",
     "com.unity.ads": "2.0.8",
     "com.unity.analytics": "3.3.2",
     "com.unity.collab-proxy": "1.2.16",
