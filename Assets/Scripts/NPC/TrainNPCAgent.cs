@@ -111,6 +111,9 @@ public class TrainNPCAgent : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Flips character sprite and calculate moving velocity of GameObject based on movespeed
+    /// </summary>
     private void ComputeVelosity()
     {
         bool flipSprite = (_sr.flipX ? (_move.x > 0.01f) : (_move.x < -0.01f));
@@ -133,6 +136,11 @@ public class TrainNPCAgent : MonoBehaviour
         Movement(move, true);
     }
 
+    /// <summary>
+    /// Moves GameObject and prevent passing through colliders  
+    /// </summary>
+    /// <param name="move">Delta position</param>
+    /// <param name="YMovement">Is moving across Y axis</param>
     void Movement(Vector2 move, bool YMovement)
     {
         float distance = move.magnitude;

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -40,8 +41,13 @@ public class HttpController : MonoBehaviour
 
     public IEnumerator GETRequest(string path, Callback callback) {
         UnityWebRequest request = UnityWebRequest.Get(StaticClasses.SERVER_ADRESS+"/"+path);
-        if(PlayerPrefs.GetString("accountKey") != "")
+        if (PlayerPrefs.HasKey("accountKey"))
             request.SetRequestHeader("accountKey", PlayerPrefs.GetString("accountKey"));
+        else
+        {
+            PlayerPrefs.SetString("accountKey", GenerateAccountKey());
+            PlayerPrefs.Save();
+        }     
         yield return request.SendWebRequest();
 
         if(request.isNetworkError)
@@ -127,5 +133,10 @@ public class HttpController : MonoBehaviour
         {
             callback(true);
         }
+    }
+
+    private string GenerateAccountKey()
+    {
+        return Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Replace("=", "").Replace("+", "").Replace("/", "");
     }
 }

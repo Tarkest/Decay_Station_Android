@@ -1,28 +1,33 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(SpriteRenderer), typeof(Animator))]
 public class TrainWheels : MonoBehaviour
 {
     private Animator _anim;
 
+    void Awake()
+    {
+        _anim = GetComponent<Animator>();
+    }
+
     IEnumerator BeginMoving()
     {
-        _anim.SetInteger("animState", 1);
-        for (float i = 0; i < 1; i+=0.1f)
+        _anim.SetTrigger("isMoving");
+        for (float i = 0; i < 4f; i+=0.003f)
         {
-            _anim.SetFloat("WhellsSpeed", i);
+            _anim.SetFloat("whellsSpeed", i);
             yield return null;
         }
     }
 
     IEnumerator StopMoving()
     {
-        for (float i = 1; i>0; i-=0.1f)
+        for (float i = 4f; i>0; i-=0.003f)
         {
-            _anim.SetFloat("WhellsSpeed", i);
+            _anim.SetFloat("whellsSpeed", i);
             yield return null;
         }
-        _anim.SetInteger("animState", 0);
+        _anim.SetTrigger("isIdle");
     }
 }

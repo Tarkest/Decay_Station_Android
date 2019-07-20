@@ -3,14 +3,12 @@ public class Account
 {
     public int id;
     public string nickname;
-    public string accountKey;
     public int level;
     public int accountExperience;
     public Zone currentZone;
     public Locomotive[] locomotives;
     public Carriage[] carriages;
     public Character[] characters;
-
 }
 
 [System.Serializable]

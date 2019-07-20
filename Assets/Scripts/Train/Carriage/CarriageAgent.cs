@@ -1,33 +1,46 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 
 [RequireComponent(typeof(SpriteRenderer), typeof(BoxCollider2D))]
-public class CarriageAgent : MonoBehaviour
+public class CarriageAgent : TrainAgent
 {
     private int _id;
     public Vector3[] buildingsPositions;
-    public TrainWheels[] wheels = new TrainWheels[2];
-    private GameObject[] _currentBuildings;
+    private TrainBuilding[] _currentInnerBuildings;
+    private TrainBuilding[] _currentOuterBuildings;
 
-    public void LoadInstance(Locomotive info)
+    /// <summary>
+    /// Initialize data of carriage agent
+    /// </summary>
+    /// <param name="info">Carriage data from account</param>
+    public void LoadInstance(Carriage info)
     {
         _id = info.id;
-    }
-
-    public void BeginMoving()
-    {
-        foreach (TrainWheels i in wheels)
+        _currentInnerBuildings = new TrainBuilding[info.inner.Length];
+        for (int i = 0; i < info.inner.Length; i++)
         {
-            i.StartCoroutine("BeginMoving");
+            TrainBuilding instance = (Instantiate(Resources.Load("Carriages/Buildings/Outer" + info.outer[i].name), buildingsPositions[i], Quaternion.identity) as GameObject).GetComponent<TrainBuilding>();
+            instance.LoadInstance(info.outer[i]);
+            _currentInnerBuildings[i] = instance;
+
         }
-    }
-
-    public void StopMoving()
-    {
-        foreach (TrainWheels i in wheels)
+        _currentOuterBuildings = new TrainBuilding[info.outer.Length];
+        for (int i = 0; i < info.outer.Length; i++)
         {
-            i.StartCoroutine("StopMoving");
+            TrainBuilding instance = (Instantiate(Resources.Load("Carriages/Buildings/Outer" + info.outer[i].name), buildingsPositions[i], Quaternion.identity) as GameObject).GetComponent<TrainBuilding>();
+            instance.LoadInstance(info.outer[i]);
+            _currentOuterBuildings[i] = instance;
+
         }
     }
 }
+
+//#if UNITY_EDITOR
+//[CustomEditor(typeof(CarriageAgent))]
+//public class CarrigeAgentInspector
+//{
+
+//}
+//#endif
