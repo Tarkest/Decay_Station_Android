@@ -24,7 +24,7 @@ public class LocomotiveAgent : TrainAgent
         _currentBuildings = new TrainBuilding[info.outer.Length];
         for (int i = 0; i < info.outer.Length; i++)
         {
-            TrainBuilding instance = (Instantiate(Resources.Load("Locomotive/Buildings/Outer" + info.outer[i].name), buildingsPositions[i], Quaternion.identity) as GameObject).GetComponent<TrainBuilding>();
+            TrainBuilding instance = (Instantiate(Resources.Load("Locomotive/Buildings/Outer/" + info.outer[i].name), buildingsPositions[i], Quaternion.identity) as GameObject).GetComponent<TrainBuilding>();
             instance.LoadInstance(info.outer[i]);
             _currentBuildings[i] = instance;
 

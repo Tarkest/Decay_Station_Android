@@ -21,15 +21,15 @@ public class CarriageAgent : TrainAgent
         _currentInnerBuildings = new TrainBuilding[info.inner.Length];
         for (int i = 0; i < info.inner.Length; i++)
         {
-            TrainBuilding instance = (Instantiate(Resources.Load("Carriages/Buildings/Outer" + info.outer[i].name), buildingsPositions[i], Quaternion.identity) as GameObject).GetComponent<TrainBuilding>();
-            instance.LoadInstance(info.outer[i]);
+            TrainBuilding instance = (Instantiate(Resources.Load("Carriages/Buildings/Inner/" + info.inner[i].name), transform.position + buildingsPositions[i], Quaternion.identity) as GameObject).GetComponent<TrainBuilding>();
+            instance.LoadInstance(info.inner[i]);
             _currentInnerBuildings[i] = instance;
 
         }
         _currentOuterBuildings = new TrainBuilding[info.outer.Length];
         for (int i = 0; i < info.outer.Length; i++)
         {
-            TrainBuilding instance = (Instantiate(Resources.Load("Carriages/Buildings/Outer" + info.outer[i].name), buildingsPositions[i], Quaternion.identity) as GameObject).GetComponent<TrainBuilding>();
+            TrainBuilding instance = (Instantiate(Resources.Load("Carriages/Buildings/Outer/" + info.outer[i].name), transform.position + buildingsPositions[i], Quaternion.identity) as GameObject).GetComponent<TrainBuilding>();
             instance.LoadInstance(info.outer[i]);
             _currentOuterBuildings[i] = instance;
 

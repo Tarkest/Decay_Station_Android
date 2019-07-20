@@ -24,7 +24,7 @@ public class GameManager : MonoBehaviour
     public static CarriageAgent[] carriages = new CarriageAgent[0];
     public static TrainNPCData[] characters = new TrainNPCData[0];
 
-    void Awake()
+    void Start()
     {
         DontDestroyOnLoad(this);
         if(PlayerPrefs.GetInt("Language", -1) == -1)
@@ -37,5 +37,6 @@ public class GameManager : MonoBehaviour
             PlayerPrefs.SetInt("Language", _currentLanguage);
             PlayerPrefs.Save();
         }
+        TrainRoomLoader.LoadTrain();
     }
 }

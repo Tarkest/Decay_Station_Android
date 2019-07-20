@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class TrainNPCData : MonoBehaviour
+﻿public class TrainNPCData
 {
     public int id;
     public string characterName;

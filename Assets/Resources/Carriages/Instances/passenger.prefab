@@ -401,7 +401,7 @@ GameObject:
   - component: {fileID: 2249482713170868862}
   - component: {fileID: 8939827165082668376}
   m_Layer: 0
-  m_Name: passenger_simple
+  m_Name: passenger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -550,8 +550,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea0a50ba5aa0ec54d969112f21486a26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _sr: {fileID: 0}
-  buildingsPositions: []
   wheels:
   - {fileID: 1994236224638420962}
   - {fileID: 3389472078533944100}
+  _sr: {fileID: 0}
+  buildingsPositions:
+  - {x: 5, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: -5, y: 0, z: 0}

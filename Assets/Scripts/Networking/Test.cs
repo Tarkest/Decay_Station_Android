@@ -4,14 +4,10 @@ using UnityEngine;
 
 public class Test : MonoBehaviour
 {
-    // Start is called before the first frame update
+    // Call any test method here
     void Start()
     {
-        GameObject.Find("HTTP").GetComponent<HttpController>().GET("api/user/info", GetLocomotive);
+        
     }
 
-    private void GetLocomotive(string answer)
-    {
-        Account l = JsonUtility.FromJson<Account>(answer);
-    }
 }

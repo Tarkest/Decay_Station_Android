@@ -7,9 +7,13 @@ using UnityEngine.Networking;
 public class HttpController : MonoBehaviour
 {
     public static HttpController instance; 
-    public delegate void Callback(string json);
-    public delegate void CallbackBool(bool result);
+    public delegate void Callback(string json, string error);
     private static Queue<IEnumerator> queue = new Queue<IEnumerator>();
+
+    private void Awake()
+    {
+        instance = this;
+    }
 
     private void Update()
     {
@@ -34,7 +38,7 @@ public class HttpController : MonoBehaviour
         queue.Enqueue(PUTrequest(path, json, callback));
     }
 
-    public void DELETE(string path, CallbackBool callback)
+    public void DELETE(string path, Callback callback)
     {
         queue.Enqueue(DeleteRequest(path, callback));
     }
@@ -42,27 +46,26 @@ public class HttpController : MonoBehaviour
     public IEnumerator GETRequest(string path, Callback callback) {
         UnityWebRequest request = UnityWebRequest.Get(StaticClasses.SERVER_ADRESS+"/"+path);
         if (PlayerPrefs.HasKey("accountKey"))
-            request.SetRequestHeader("accountKey", PlayerPrefs.GetString("accountKey"));
+            request.SetRequestHeader("auth", PlayerPrefs.GetString("accountKey"));
         else
         {
             PlayerPrefs.SetString("accountKey", GenerateAccountKey());
+            request.SetRequestHeader("auth", PlayerPrefs.GetString("accountKey"));
             PlayerPrefs.Save();
         }     
         yield return request.SendWebRequest();
 
         if(request.isNetworkError)
         {
-            Debug.Log(request.error);
-            callback(null);
+            callback(null, request.error);
         }
         else if(request.isHttpError)
         {
-            Debug.Log(request.error);
-            callback(null);
+            callback(null, request.error);
         }
         else
         {
-            callback(request.downloadHandler.text);
+            callback(request.downloadHandler.text, "");
         }
     }
 
@@ -70,22 +73,20 @@ public class HttpController : MonoBehaviour
     {
         UnityWebRequest request = UnityWebRequest.Post(StaticClasses.SERVER_ADRESS+"/"+path, json);
         if (PlayerPrefs.GetString("accountKey") != "")
-            request.SetRequestHeader("accountKey", PlayerPrefs.GetString("accountKey"));
+            request.SetRequestHeader("auth", PlayerPrefs.GetString("accountKey"));
         yield return request.SendWebRequest();
 
         if (request.isNetworkError)
         {
-            Debug.Log(request.error);
-            callback(null);
+            callback(null, request.error);
         }
         else if (request.isHttpError)
         {
-            Debug.Log(request.error);
-            callback(null);
+            callback(null, request.error);
         }
         else
         {
-            callback(request.downloadHandler.text);
+            callback(request.downloadHandler.text, "");
         }
     }
 
@@ -93,45 +94,41 @@ public class HttpController : MonoBehaviour
     {
         UnityWebRequest request = UnityWebRequest.Put(StaticClasses.SERVER_ADRESS + "/" + path, json);
         if (PlayerPrefs.GetString("accountKey") != "")
-            request.SetRequestHeader("accountKey", PlayerPrefs.GetString("accountKey"));
+            request.SetRequestHeader("auth", PlayerPrefs.GetString("accountKey"));
         yield return request.SendWebRequest();
 
         if (request.isNetworkError)
         {
-            Debug.Log(request.error);
-            callback(null);
+            callback(null, request.error);
         }
         else if (request.isHttpError)
         {
-            Debug.Log(request.error);
-            callback(null);
+            callback(null, request.error);
         }
         else
         {
-            callback(request.downloadHandler.text);
+            callback(request.downloadHandler.text, "");
         }
     }
 
-    public IEnumerator DeleteRequest(string path, CallbackBool callback)
+    public IEnumerator DeleteRequest(string path, Callback callback)
     {
         UnityWebRequest request = UnityWebRequest.Delete(StaticClasses.SERVER_ADRESS + "/" + path);
         if (PlayerPrefs.GetString("accountKey") != "")
-            request.SetRequestHeader("accountKey", PlayerPrefs.GetString("accountKey"));
+            request.SetRequestHeader("auth", PlayerPrefs.GetString("accountKey"));
         yield return request.SendWebRequest();
 
         if (request.isNetworkError)
         {
-            Debug.Log(request.error);
-            callback(false);
+            callback(null, request.error);
         }
         else if (request.isHttpError)
         {
-            Debug.Log(request.error);
-            callback(false);
+            callback(null, request.error);
         }
         else
         {
-            callback(true);
+            callback(request.downloadHandler.text, "");
         }
     }
 

@@ -80,8 +80,15 @@ public class Character
     public int strength;
     public int agility;
     public int intelligence;
+    public CharacterType type;
     public CharacterSpecialization specialization;
     public CharacterParametersExperience paramsExperience;
+}
+
+[System.Serializable]
+public class CharacterType
+{
+    public string name;
 }
 
 [System.Serializable]
