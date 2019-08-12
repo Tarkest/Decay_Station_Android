@@ -16,14 +16,14 @@ public class TrainRoomLoader : MonoBehaviour
     }
 
     /// <summary>
-    /// Instantiate locomotive and carriages with building to train scene based on account info json
+    /// Instantiate locomotive and carriages with building to train scene, based on data from account info json
     /// </summary>
     /// <param name="accountInfo">JSON string what contain account info</param>
     private static void InstantiateTrain(string accountInfo, string error)
     {
         if(error.Length > 0)
         {
-            Debug.Log("TrainRoomLoader ON_TRAIN_LOAD " + error);
+            Debug.LogError("TrainRoomLoader ON_TRAIN_LOAD " + error);
         }
         else
         {

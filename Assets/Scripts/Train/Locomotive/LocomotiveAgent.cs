@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEditor;
+﻿using UnityEngine;
 
 [RequireComponent(typeof(SpriteRenderer), typeof(BoxCollider2D))]
 public class LocomotiveAgent : TrainAgent
@@ -10,6 +7,7 @@ public class LocomotiveAgent : TrainAgent
     private int _level;
     public Sprite[] sprites;
     public Vector3[] buildingsPositions;
+    public LocomotiveForeground foreground;
     private TrainBuilding[] _currentBuildings;
 
     /// <summary>
@@ -21,21 +19,16 @@ public class LocomotiveAgent : TrainAgent
         _id = info.id;
         _level = info.level;
         _sr.sprite = sprites[_level - 1];
+        if(foreground != null)
+        {
+            foreground.LoadInstance(info.level);
+        }
         _currentBuildings = new TrainBuilding[info.outer.Length];
         for (int i = 0; i < info.outer.Length; i++)
         {
             TrainBuilding instance = (Instantiate(Resources.Load("Locomotive/Buildings/Outer/" + info.outer[i].name), buildingsPositions[i], Quaternion.identity) as GameObject).GetComponent<TrainBuilding>();
             instance.LoadInstance(info.outer[i]);
             _currentBuildings[i] = instance;
-
         }
     }
 }
-
-//#if UNITY_EDITOR
-//[CustomEditor(typeof(LocomotiveAgent))]
-//public class LocomotiveAgentInspector
-//{
-
-//}
-//#endif

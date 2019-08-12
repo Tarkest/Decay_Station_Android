@@ -2,7 +2,6 @@
 
 public class GameManager : MonoBehaviour
 {
-    public string testJson;
     public static int accountId;
     public static string nickname;
     public static int accountLevel;

@@ -14,7 +14,7 @@ public class TrainWheels : MonoBehaviour
     IEnumerator BeginMoving()
     {
         _anim.SetTrigger("isMoving");
-        for (float i = 0; i < 4f; i+=0.003f)
+        for (float i = 0; i < 13f; i+=0.003f)
         {
             _anim.SetFloat("whellsSpeed", i);
             yield return null;
@@ -23,7 +23,7 @@ public class TrainWheels : MonoBehaviour
 
     IEnumerator StopMoving()
     {
-        for (float i = 4f; i>0; i-=0.003f)
+        for (float i = 13f; i>0; i-=0.003f)
         {
             _anim.SetFloat("whellsSpeed", i);
             yield return null;
