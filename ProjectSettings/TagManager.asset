@@ -13,9 +13,9 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
-  - 
+  - 1
+  - 2
+  - 3
   - 
   - 
   - 
@@ -40,4 +40,97 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: 0
+    uniqueID: 1475441845
+    locked: 0
+  - name: 1
+    uniqueID: 2056045863
+    locked: 0
+  - name: 2
+    uniqueID: 1182346855
+    locked: 0
+  - name: 3
+    uniqueID: 3707641571
+    locked: 0
+  - name: 4
+    uniqueID: 2690319949
+    locked: 0
+  - name: 5
+    uniqueID: 2365378917
+    locked: 0
+  - name: 6
+    uniqueID: 3449812101
+    locked: 0
+  - name: 7
+    uniqueID: 4167481259
+    locked: 0
+  - name: 8
+    uniqueID: 3273756501
+    locked: 0
+  - name: 9
+    uniqueID: 626367751
+    locked: 0
+  - name: 10
+    uniqueID: 4020135061
+    locked: 0
+  - name: 11
+    uniqueID: 1288417679
+    locked: 0
+  - name: 12
+    uniqueID: 1268611037
+    locked: 0
+  - name: 13
+    uniqueID: 239513709
+    locked: 0
+  - name: 14
+    uniqueID: 76394851
+    locked: 0
+  - name: 15
+    uniqueID: 3976727589
+    locked: 0
+  - name: 16
+    uniqueID: 1712412173
+    locked: 0
+  - name: 17
+    uniqueID: 1126326811
+    locked: 0
+  - name: 18
+    uniqueID: 801975063
+    locked: 0
+  - name: 19
+    uniqueID: 1259494681
+    locked: 0
+  - name: 20
+    uniqueID: 3397472699
+    locked: 0
+  - name: 21
+    uniqueID: 1685978287
+    locked: 0
+  - name: 22
+    uniqueID: 2956338865
+    locked: 0
+  - name: 23
+    uniqueID: 2764481419
+    locked: 0
+  - name: 24
+    uniqueID: 1824447961
+    locked: 0
+  - name: 25
+    uniqueID: 855742563
+    locked: 0
+  - name: 26
+    uniqueID: 3678263413
+    locked: 0
+  - name: 27
+    uniqueID: 3644559673
+    locked: 0
+  - name: 28
+    uniqueID: 962788965
+    locked: 0
+  - name: 29
+    uniqueID: 1218642879
+    locked: 0
+  - name: New Layer
+    uniqueID: 4224268337
     locked: 0

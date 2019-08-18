@@ -1,12 +1,12 @@
 ﻿using UnityEngine;
 
 [RequireComponent(typeof(BoxCollider2D))]
-public class Worktable : TrainAgentTarget
+public class TrainBuilding : TrainAgentTarget
 {
-    public int id;
+    private int _id;
 
     public void LoadInstance(Building info)
     {
-        id = info.id;
+        _id = info.id;
     }
 }

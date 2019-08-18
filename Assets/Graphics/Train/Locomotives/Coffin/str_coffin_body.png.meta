@@ -1,16 +1,22 @@
 fileFormatVersion: 2
-guid: 9f5e19b68c6e2434ea7b2a6716f04072
+guid: eb01d79a22917aa41943ce439d776ae0
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -2979909832964276018
-    second: locomotive_0
+      213: -4544229790299040798
+    second: str_coffin_body_0
   - first:
-      213: 3141323566243685911
-    second: locomotive_1
+      213: -4457588069251948438
+    second: str_coffin_body_1
   - first:
-      213: -3915868787415483366
-    second: locomotive_2
+      213: 1421679640740502913
+    second: str_coffin_body_2
+  - first:
+      213: 3304675982216325717
+    second: str_coffin_body_3
+  - first:
+      213: -500818308843563949
+    second: str_coffin_body_4
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -43,9 +49,9 @@ TextureImporter:
     filterMode: 0
     aniso: -1
     mipBias: -100
-    wrapU: 0
-    wrapV: 0
-    wrapW: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
@@ -67,7 +73,7 @@ TextureImporter:
   compressionQualitySet: 0
   textureFormatSet: 0
   platformSettings:
-  - serializedVersion: 2
+  - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
     maxTextureSize: 2048
     resizeAlgorithm: 0
@@ -78,7 +84,8 @@ TextureImporter:
     allowsAlphaSplitting: 0
     overridden: 0
     androidETC2FallbackOverride: 0
-  - serializedVersion: 2
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
     buildTarget: Standalone
     maxTextureSize: 2048
     resizeAlgorithm: 0
@@ -89,7 +96,8 @@ TextureImporter:
     allowsAlphaSplitting: 0
     overridden: 0
     androidETC2FallbackOverride: 0
-  - serializedVersion: 2
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
     buildTarget: iPhone
     maxTextureSize: 2048
     resizeAlgorithm: 0
@@ -100,7 +108,8 @@ TextureImporter:
     allowsAlphaSplitting: 0
     overridden: 0
     androidETC2FallbackOverride: 0
-  - serializedVersion: 2
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
     buildTarget: Android
     maxTextureSize: 2048
     resizeAlgorithm: 0
@@ -111,17 +120,18 @@ TextureImporter:
     allowsAlphaSplitting: 0
     overridden: 0
     androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: locomotive_0
+      name: str_coffin_body_0
       rect:
         serializedVersion: 2
-        x: 60
-        y: 658
-        width: 726
-        height: 220
+        x: 64
+        y: 1298
+        width: 722
+        height: 226
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -129,50 +139,92 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 1a22bdd55ebb9c645becf4be087d9893
-      internalID: -2979909832964276018
+      spriteID: 29c9306195da7054b80f76bae52b0e3e
+      internalID: -4544229790299040798
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: locomotive_1
+      name: str_coffin_body_1
       rect:
         serializedVersion: 2
-        x: 60
+        x: 64
+        y: 978
+        width: 706
+        height: 220
+      alignment: 9
+      pivot: {x: 0.51133144, y: 0.51363635}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3fa3e8dd7d5835a4d9f5fa7b4670e6a3
+      internalID: -4457588069251948438
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: str_coffin_body_2
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 658
+        width: 710
+        height: 220
+      alignment: 9
+      pivot: {x: 0.5084507, y: 0.51363635}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 50300147492c0be4e83a8dbd4926e7d3
+      internalID: 1421679640740502913
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: str_coffin_body_3
+      rect:
+        serializedVersion: 2
+        x: 64
         y: 338
         width: 710
-        height: 278
+        height: 228
       alignment: 9
-      pivot: {x: 0.5112676, y: 0.39568347}
+      pivot: {x: 0.5084507, y: 0.49561402}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3342a8c4a42ac1646b7e8a2a960feeea
-      internalID: 3141323566243685911
+      spriteID: 9ddaa6064093ec940ba6b1b5a213da80
+      internalID: 3304675982216325717
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: locomotive_2
+      name: str_coffin_body_4
       rect:
         serializedVersion: 2
-        x: 60
+        x: 64
         y: 18
-        width: 714
-        height: 278
+        width: 710
+        height: 228
       alignment: 9
-      pivot: {x: 0.50840336, y: 0.39568347}
+      pivot: {x: 0.5084507, y: 0.49561402}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: dfb03c0e9335bfa4fad189595801aca7
-      internalID: -3915868787415483366
+      spriteID: 4d43e4b0879d5394895d7491d5b3a9c4
+      internalID: -500818308843563949
       vertices: []
       indices: 
       edges: []
@@ -180,13 +232,15 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 6dead6164809c71468f26eb3e5254751
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
     edges: []
     weights: []
-    secondaryTextures: []
+    secondaryTextures:
+    - texture: {fileID: 2800000, guid: 5bb0bcee40251be4bbef31786f3ed34b, type: 3}
+      name: _NormalMap
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
