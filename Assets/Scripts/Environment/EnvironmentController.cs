@@ -41,7 +41,7 @@ public class EnvironmentController : MonoBehaviour
             foreach(GameObject _layer in _positions[i])
             {
                 if(_layer)
-                    _layer.transform.Translate(new Vector3(speed * (_layer.GetComponent<SpriteRenderer>().sortingOrder * 0.1f), 0, 0));
+                    _layer.transform.Translate(new Vector3(speed * (_layer.GetComponent<SpriteRenderer>().sortingOrder * 0.1f * Time.deltaTime), 0, 0));
             }
         }
     }

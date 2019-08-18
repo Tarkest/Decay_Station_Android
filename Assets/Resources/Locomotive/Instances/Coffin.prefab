@@ -341,7 +341,7 @@ GameObject:
   - component: {fileID: 959508696464300245}
   - component: {fileID: 6776377604198789703}
   m_Layer: 0
-  m_Name: coffin
+  m_Name: Coffin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
