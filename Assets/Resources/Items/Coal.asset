@@ -10,6 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c1d2cb08f3d35f94692f7e9e53771f55, type: 3}
-  m_Name: Orange
+  m_Name: Coal
   m_EditorClassIdentifier: 
-  Name: Orange
+  Name: Coal
+  Icon: {fileID: -8595601747549344518, guid: 674237b0c1a9e724f83e051822ac8f3c, type: 3}

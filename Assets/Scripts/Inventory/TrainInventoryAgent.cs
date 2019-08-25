@@ -21,6 +21,9 @@ public class TrainInventoryAgent : MonoBehaviour
     {
         //HttpController.instance.GET("/api/inventories", GetCallback);
         GetCallback(_json);
+        Item item = ItemSystem.GetItem("Coal");
+        Debug.Log(item.Name);
+        Debug.Log(item.Icon);
     }
 
     /// <summary>

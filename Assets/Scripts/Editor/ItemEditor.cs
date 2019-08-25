@@ -6,17 +6,31 @@ public class ItemEditor : Editor
 {
     public override void OnInspectorGUI()
     {
-        EditorGUIUtility.labelWidth = 60;
         Item item = (Item)target;
 
+        // Name input field
         GUILayout.BeginHorizontal();
             GUILayout.Label("Name: ", GUILayout.Width(80));
             item.Name = GUILayout.TextField(item.Name);
         GUILayout.EndHorizontal();
 
+        // Icon field
         GUILayout.BeginHorizontal();
-            GUILayout.Label("Amount: ", GUILayout.Width(80));
-            item.Amount = EditorGUILayout.IntField(item.Amount);
+            item.Icon = (Sprite)EditorGUILayout.ObjectField("Icon: ",item.Icon, typeof(Sprite), allowSceneObjects: true, GUILayout.ExpandWidth(true));
         GUILayout.EndHorizontal();
+
+    }
+
+    public static bool Validation(Item item)
+    {
+        // Name empty
+        if (string.IsNullOrEmpty(item.Name))
+            return false;
+
+        // Icon = null
+        if (item.Icon == null)
+            return false;
+
+        return true;
     }
 }

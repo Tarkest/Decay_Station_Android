@@ -10,8 +10,8 @@ public class ItemSystemWindow : EditorWindow
         Add,
         Change
     }
-
-    string path = "Items/";
+    
+    readonly string path = "Items/";
 
     WindowStage stage = WindowStage.Main;
     Vector2 scrollPosition = new Vector2();
@@ -22,22 +22,15 @@ public class ItemSystemWindow : EditorWindow
     Editor itemEditor;
     ItemCopy tmpItem;
 
-    #region Add and Change Variables
-
-    string itemName;
-    int itemAmount;
-
-    #endregion
-
-    private void OnEnable()
-    {
-        Get();
-    }
-
     [MenuItem("Window/ItemSystem")]
     private static void ShowWindow()
     {
         GetWindow<ItemSystemWindow>(typeof(ItemSystemWindow));
+    }
+
+    private void OnEnable()
+    {
+        Get();
     }
 
     private void OnGUI()
@@ -62,7 +55,7 @@ public class ItemSystemWindow : EditorWindow
     {
         // Input
         GUILayout.Label("Enter item's name:");
-        itemName = input = GUILayout.TextField(input);
+        input = GUILayout.TextField(input);
 
         // Add and Get buttons
         GUILayout.BeginHorizontal();
@@ -129,7 +122,8 @@ public class ItemSystemWindow : EditorWindow
             GUILayout.FlexibleSpace();
             if (GUILayout.Button("Apply"))
             {
-                Add();
+                if(ItemEditor.Validation((itemEditor.target as Item)))
+                    Add();
             }
             if (GUILayout.Button("Cancel"))
             {
@@ -164,7 +158,8 @@ public class ItemSystemWindow : EditorWindow
         GUILayout.FlexibleSpace();
         if (GUILayout.Button("Apply"))
         {
-            Change();
+            if (ItemEditor.Validation((itemEditor.target as Item)))
+                Change();
         }
         if (GUILayout.Button("Cancel"))
         {
@@ -180,6 +175,9 @@ public class ItemSystemWindow : EditorWindow
 
     #region Actions
 
+    /// <summary>
+    /// Define itemEditor of empty item providing input fields
+    /// </summary>
     private void WillAdd()
     {
         itemEditor = Editor.CreateEditor(Resources.Load($"{path}_defaultItem"));
