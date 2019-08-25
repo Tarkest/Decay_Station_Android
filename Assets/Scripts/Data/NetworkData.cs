@@ -35,13 +35,6 @@ public class LocomotiveType
 }
 
 [System.Serializable]
-public class LocomotiveInventory
-{
-    public int id;
-    public MyInventoryItemView5284984894[] items;
-}
-
-[System.Serializable]
 public class Carriage
 {
     public int id;
@@ -55,13 +48,6 @@ public class Carriage
 public class CarriageType
 {
     public string name;
-}
-
-[System.Serializable]
-public class CarriageInventory
-{
-    public int id;
-    public MyInventoryItemView5284984894[] items;
 }
 
 [System.Serializable]
@@ -106,14 +92,14 @@ public class CharacterParametersExperience
 }
 
 [System.Serializable]
-public class CharacterInventory
+public class NInventory
 {
     public int id;
-    public MyInventoryItemView5284984894[] items;
+    public NCell[] items;
 }
 
 [System.Serializable]
-public class MyInventoryItemView5284984894
+public class NCell
 {
     public int id;
     public string name;
@@ -124,9 +110,9 @@ public class MyInventoryItemView5284984894
 [System.Serializable]
 public class Inventories
 {
-    public LocomotiveInventory[] locomotives;
-    public CarriageInventory[] carriages;
-    public CharacterInventory[] characters;
+    public NInventory[] locomotives;
+    public NInventory[] carriages;
+    public NInventory[] characters;
 }
 
 //Packages for send

@@ -6,9 +6,9 @@ public class TrainInventoryAgent : MonoBehaviour
 
     string _json = "{\"locomotives\":[{\"id\":1,\"items\":[{\"id\":1,\"name\":\"\",\"amount\":0,\"cellId\":0},{\"id\":2,\"name\":\"kartoshka\",\"amount\":10,\"cellId\":1},{\"id\":3,\"name\":\"kartoshka\",\"amount\":10,\"cellId\":2},{\"id\":4,\"name\":\"kartoshka\",\"amount\":10,\"cellId\":3},{\"id\":5,\"name\":\"\",\"amount\":0,\"cellId\":4},{\"id\":6,\"name\":\"\",\"amount\":0,\"cellId\":5},{\"id\":7,\"name\":\"\",\"amount\":0,\"cellId\":6},{\"id\":8,\"name\":\"\",\"amount\":0,\"cellId\":7},{\"id\":9,\"name\":\"kartoshka\",\"amount\":10,\"cellId\":8},{\"id\":10,\"name\":\"kartoshka\",\"amount\":10,\"cellId\":9},{\"id\":11,\"name\":\"\",\"amount\":0,\"cellId\":10}]}],\"carriages\":[{\"id\":2,\"items\":[{\"id\":12,\"name\":\"kartoshka\",\"amount\":20,\"cellId\":0},{\"id\":13,\"name\":\"kartoshka\",\"amount\":10,\"cellId\":2},{\"id\":14,\"name\":\"\",\"amount\":0,\"cellId\":3},{\"id\":15,\"name\":\"\",\"amount\":0,\"cellId\":4},{\"id\":16,\"name\":\"kartoshka\",\"amount\":10,\"cellId\":5}]}],\"characters\":[{\"id\":3,\"items\":[{\"id\":17,\"name\":\"kartoshka\",\"amount\":20,\"cellId\":0},{\"id\":18,\"name\":\"\",\"amount\":\"\",\"cellId\":1},{\"id\":19,\"name\":\"kartoshka\",\"amount\":10,\"cellId\":2}]}]}";
 
-    LocomotiveInventory _locomotiveInventory;
-    CharacterInventory[] _characterInventories;
-    CarriageInventory[] _carriageInventories;
+    NInventory _locomotiveInventory;
+    NInventory[] _characterInventories;
+    NInventory[] _carriageInventories;
 
     public static int choosenItem = -1;
 
