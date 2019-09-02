@@ -1,0 +1,94 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9dcfc88cbb98a0345b8b47027f2fe1c1, type: 3}
+  m_Name: New Environment
+  m_EditorClassIdentifier: 
+  environmentSprites:
+  - variation:
+    - {fileID: 21300000, guid: 428e959f162c15a45bed417924510dbf, type: 3}
+    isMovingWhenStatic: 0
+    staticMoveSpeed: 0
+  - variation: []
+    isMovingWhenStatic: 0
+    staticMoveSpeed: 0
+  - variation:
+    - {fileID: 21300000, guid: 06cfd01364e710b4fbce8fd612cd8137, type: 3}
+    isMovingWhenStatic: 1
+    staticMoveSpeed: 0.09
+  - variation:
+    - {fileID: 21300000, guid: 18d680afa8a77ac41b19108254dd5b19, type: 3}
+    isMovingWhenStatic: 0
+    staticMoveSpeed: 0
+  - variation:
+    - {fileID: 21300000, guid: 06cfd01364e710b4fbce8fd612cd8137, type: 3}
+    isMovingWhenStatic: 1
+    staticMoveSpeed: 0.07
+  - variation:
+    - {fileID: 21300000, guid: 19ce55fbd62da1f44942ed6eb2f86ecb, type: 3}
+    isMovingWhenStatic: 0
+    staticMoveSpeed: 0
+  - variation: []
+    isMovingWhenStatic: 0
+    staticMoveSpeed: 0
+  - variation:
+    - {fileID: 21300000, guid: b2c786a2d8ef2a346aa886acce3414e5, type: 3}
+    isMovingWhenStatic: 0
+    staticMoveSpeed: 0
+  - variation: []
+    isMovingWhenStatic: 0
+    staticMoveSpeed: 0
+  - variation:
+    - {fileID: 21300000, guid: 3fc4080b438752347aac10fe8f135fb2, type: 3}
+    isMovingWhenStatic: 0
+    staticMoveSpeed: 0
+  - variation: []
+    isMovingWhenStatic: 0
+    staticMoveSpeed: 0
+  - variation: []
+    isMovingWhenStatic: 0
+    staticMoveSpeed: 0
+  - variation: []
+    isMovingWhenStatic: 0
+    staticMoveSpeed: 0
+  - variation: []
+    isMovingWhenStatic: 0
+    staticMoveSpeed: 0
+  - variation: []
+    isMovingWhenStatic: 0
+    staticMoveSpeed: 0
+  - variation: []
+    isMovingWhenStatic: 0
+    staticMoveSpeed: 0
+  - variation: []
+    isMovingWhenStatic: 0
+    staticMoveSpeed: 0
+  - variation: []
+    isMovingWhenStatic: 0
+    staticMoveSpeed: 0
+  - variation: []
+    isMovingWhenStatic: 0
+    staticMoveSpeed: 0
+  - variation: []
+    isMovingWhenStatic: 0
+    staticMoveSpeed: 0
+  rails:
+    variation: []
+    isMovingWhenStatic: 0
+    staticMoveSpeed: 0
+  railsForeground:
+    variation: []
+    isMovingWhenStatic: 0
+    staticMoveSpeed: 0
+  railsBackground:
+    variation: []
+    isMovingWhenStatic: 0
+    staticMoveSpeed: 0

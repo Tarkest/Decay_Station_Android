@@ -1,60 +1,64 @@
 ﻿using UnityEngine;
-using System;
 
 public class EnvironmentController : MonoBehaviour
 {
+    public float currentSpeed;
     public EnvironmentData currentEnvironment;
     public EnvironmentData nextEnvironment;
+    private int _environmentLenght;
 
-    public float speed;
-
-    public GameObject[][] _positions = new GameObject[20][];
-
-    //public void Initialize(EnvironmentData environment)
     private void Start()
     {
-        //currentEnvironment = environment;
-        for (int i = 0; i < 20; i++)
+        LoadEnvironment(currentEnvironment.name, 77);
+    }
+
+    public void LoadEnvironment(string environmentName, float trainLenght)
+    {
+        currentEnvironment = Resources.Load<EnvironmentData>("Environments/Train/" + environmentName);
+        _environmentLenght = (int)Mathf.Ceil(trainLenght / currentEnvironment.size) + 2;
+
+        LoadLayers(0, 10);
+
+        if(currentEnvironment.railsBackground.notEmpty)
+            InstantiateLayer(currentEnvironment.railsBackground, 10);
+
+        if (currentEnvironment.rails.notEmpty)
+            InstantiateLayer(currentEnvironment.rails, 15);
+
+        if (currentEnvironment.railsForeground.notEmpty)
+            InstantiateLayer(currentEnvironment.railsForeground, 19);
+
+        LoadLayers(20, 30);
+    }
+
+    public void ChangeEnvironment()
+    {
+
+    }
+
+    public void ChangeSpeed(float value)
+    {
+        currentSpeed += value;
+    }
+
+    private void LoadLayers(int from, int to)
+    {
+        for (int i = from; i < to; i++)
         {
-            _positions[i] = new GameObject[5];
-        }
-        for (int i = 0; i < 10; i++)
-        {
-            if(currentEnvironment.environmentSprites[i].GetSprite())
+            int _layerIndex = from > 0 ? i - 10 : i;
+            if (currentEnvironment.environmentSprites[_layerIndex].notEmpty)
             {
-                for (int posI = -1; posI < 2; posI++)
-                {
-                    _positions[i][posI + 1] = InstantiateLayer(i, currentEnvironment.environmentSprites[i].GetSprite(), posI);
-                }
-            }
-            else
-            {
-                continue;
+                InstantiateLayer(currentEnvironment.environmentSprites[_layerIndex], _layerIndex);
             }
         }
     }
 
-    private void Update()
+    private void InstantiateLayer(EnvironmentLayerData layerData, int layerIndex)
     {
-        for (int i = 0; i < 20; i++)
-        {
-            foreach(GameObject _layer in _positions[i])
-            {
-                if(_layer)
-                    _layer.transform.Translate(new Vector3(speed * (_layer.GetComponent<SpriteRenderer>().sortingOrder * 0.1f * Time.deltaTime), 0, 0));
-            }
-        }
-    }
-
-    private GameObject InstantiateLayer(int layerIndex, Sprite layerSprite, int positionIndex)
-    {
-        GameObject _layer = new GameObject($"{ layerIndex + 1 } Layer", typeof(SpriteRenderer));
-        _layer.transform.parent = gameObject.transform;
-        SpriteRenderer _sr = _layer.GetComponent<SpriteRenderer>();
-        _sr.sprite = layerSprite;
-        _layer.transform.position = new Vector3(_sr.bounds.size.x * positionIndex, 0);
-        _sr.sortingLayerName = layerIndex +"";
-        _sr.sortingOrder = layerIndex;
-        return _layer;
+        GameObject _buffer = new GameObject(layerIndex + " layer");
+        _buffer.transform.position = Vector3.zero;
+        _buffer.transform.parent = transform;
+        EnvironmentLayer _layerBuffer = _buffer.AddComponent<EnvironmentLayer>();
+        _layerBuffer.LoadLayer(layerData, layerIndex, _environmentLenght, this);
     }
 }

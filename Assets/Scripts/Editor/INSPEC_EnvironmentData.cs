@@ -11,7 +11,6 @@ public class INSPEC_EnvironmentData : Editor
     SerializedProperty _environmentRails;
     SerializedProperty _environmentRailsForeground;
     AnimBool[] _showArray = new AnimBool[24];
-    EnvironmentData data;
 
     private void OnEnable()
     {
@@ -43,14 +42,24 @@ public class INSPEC_EnvironmentData : Editor
                     if (GUILayout.Button("X"))
                     {
                         _environmentSprites.GetArrayElementAtIndex(i).FindPropertyRelative("variation").DeleteArrayElementAtIndex(sprI);
-                        _environmentSprites.GetArrayElementAtIndex(i).FindPropertyRelative("variation").DeleteArrayElementAtIndex(sprI);
                     }
                     EndHorizontal();
                 }
+                Space();
                 if (GUILayout.Button("Add variation"))
                 {
                     _environmentSprites.GetArrayElementAtIndex(i).FindPropertyRelative("variation").InsertArrayElementAtIndex(_environmentSprites.GetArrayElementAtIndex(i).FindPropertyRelative("variation").arraySize);
                 }
+                Space();
+                BeginHorizontal();
+                if (_environmentSprites.GetArrayElementAtIndex(i).FindPropertyRelative("isMovingWhenStatic").boolValue = Toggle(new GUIContent("Moving when static", "Check if layer must move when train static"), _environmentSprites.GetArrayElementAtIndex(i).FindPropertyRelative("isMovingWhenStatic").boolValue))
+                {
+                    _environmentSprites.GetArrayElementAtIndex(i).FindPropertyRelative("staticMoveSpeed").floatValue = FloatField(new GUIContent("Move speed", "Speed with what layer will move"), _environmentSprites.GetArrayElementAtIndex(i).FindPropertyRelative("staticMoveSpeed").floatValue);
+                }
+                EndHorizontal();
+                if (_environmentSprites.GetArrayElementAtIndex(i).FindPropertyRelative("isMovingWhenStatic").boolValue && _environmentSprites.GetArrayElementAtIndex(i).FindPropertyRelative("staticMoveSpeed").floatValue <= 0)
+                    HelpBox("Move speed must be higher then 0", MessageType.Error, true);
+                Space();
                 EndVertical();
             }
             EndFadeGroup();
@@ -69,10 +78,10 @@ public class INSPEC_EnvironmentData : Editor
                 if (GUILayout.Button("X"))
                 {
                     _environmentRailsBackground.FindPropertyRelative("variation").DeleteArrayElementAtIndex(sprI);
-                    _environmentRailsBackground.FindPropertyRelative("variation").DeleteArrayElementAtIndex(sprI);
                 }
                 EndHorizontal();
             }
+            Space();
             if (GUILayout.Button("Add variation"))
             {
                 _environmentRailsBackground.FindPropertyRelative("variation").InsertArrayElementAtIndex(_environmentRailsBackground.FindPropertyRelative("variation").arraySize);
@@ -92,10 +101,10 @@ public class INSPEC_EnvironmentData : Editor
                 if (GUILayout.Button("X"))
                 {
                     _environmentRails.FindPropertyRelative("variation").DeleteArrayElementAtIndex(sprI);
-                    _environmentRails.FindPropertyRelative("variation").DeleteArrayElementAtIndex(sprI);
                 }
                 EndHorizontal();
             }
+            Space();
             if (GUILayout.Button("Add variation"))
             {
                 _environmentRails.FindPropertyRelative("variation").InsertArrayElementAtIndex(_environmentRails.FindPropertyRelative("variation").arraySize);
@@ -115,10 +124,10 @@ public class INSPEC_EnvironmentData : Editor
                 if (GUILayout.Button("X"))
                 {
                     _environmentRailsForeground.FindPropertyRelative("variation").DeleteArrayElementAtIndex(sprI);
-                    _environmentRailsForeground.FindPropertyRelative("variation").DeleteArrayElementAtIndex(sprI);
                 }
                 EndHorizontal();
             }
+            Space();
             if (GUILayout.Button("Add variation"))
             {
                 _environmentRailsForeground.FindPropertyRelative("variation").InsertArrayElementAtIndex(_environmentRailsForeground.FindPropertyRelative("variation").arraySize);
@@ -142,14 +151,24 @@ public class INSPEC_EnvironmentData : Editor
                     if (GUILayout.Button("X"))
                     {
                         _environmentSprites.GetArrayElementAtIndex(i).FindPropertyRelative("variation").DeleteArrayElementAtIndex(sprI);
-                        _environmentSprites.GetArrayElementAtIndex(i).FindPropertyRelative("variation").DeleteArrayElementAtIndex(sprI);
                     }
                     EndHorizontal();
                 }
+                Space();
                 if (GUILayout.Button("Add variation"))
                 {
                     _environmentSprites.GetArrayElementAtIndex(i).FindPropertyRelative("variation").InsertArrayElementAtIndex(_environmentSprites.GetArrayElementAtIndex(i).FindPropertyRelative("variation").arraySize);
                 }
+                Space();
+                BeginHorizontal();
+                if (_environmentSprites.GetArrayElementAtIndex(i).FindPropertyRelative("isMovingWhenStatic").boolValue = Toggle(new GUIContent("Moving when static", "Check if layer must move when train static"), _environmentSprites.GetArrayElementAtIndex(i).FindPropertyRelative("isMovingWhenStatic").boolValue))
+                {
+                    _environmentSprites.GetArrayElementAtIndex(i).FindPropertyRelative("staticMoveSpeed").floatValue = FloatField(new GUIContent("MoveSpeed", "Speed with what layer will move"), _environmentSprites.GetArrayElementAtIndex(i).FindPropertyRelative("staticMoveSpeed").floatValue);
+                }
+                EndHorizontal();
+                if (_environmentSprites.GetArrayElementAtIndex(i).FindPropertyRelative("isMovingWhenStatic").boolValue && _environmentSprites.GetArrayElementAtIndex(i).FindPropertyRelative("staticMoveSpeed").floatValue <= 0)
+                    HelpBox("Move speed must be higher then 0", MessageType.Error, true);
+                Space();
                 EndVertical();
             }
             EndFadeGroup();
