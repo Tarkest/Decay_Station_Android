@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Test
   m_EditorClassIdentifier: 
   environmentSprites:
-  - variation: []
+  - variation:
+    - {fileID: 21300000, guid: 3fc4080b438752347aac10fe8f135fb2, type: 3}
     isMovingWhenStatic: 0
     staticMoveSpeed: 0
   - variation: []
@@ -25,7 +26,8 @@ MonoBehaviour:
   - variation: []
     isMovingWhenStatic: 0
     staticMoveSpeed: 0
-  - variation: []
+  - variation:
+    - {fileID: 21300000, guid: 18d680afa8a77ac41b19108254dd5b19, type: 3}
     isMovingWhenStatic: 0
     staticMoveSpeed: 0
   - variation: []
