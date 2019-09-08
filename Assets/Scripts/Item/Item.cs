@@ -6,7 +6,6 @@
 ///     2. Item's ApplyCopy function
 ///     3. ItemEditor inspector field and Validation (if necessary)
 /// </summary>
-[CreateAssetMenu(fileName = "New Item", menuName = "Item")]
 public class Item : ScriptableObject
 {
     public string Name;

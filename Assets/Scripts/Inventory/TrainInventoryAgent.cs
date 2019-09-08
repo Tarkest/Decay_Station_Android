@@ -4,7 +4,7 @@ using UnityEngine.UI;
 public class TrainInventoryAgent : MonoBehaviour
 {
 
-    string _json = "{\"locomotives\":[{\"id\":1,\"items\":[{\"id\":1,\"name\":\"\",\"amount\":0,\"cellId\":0},{\"id\":2,\"name\":\"kartoshka\",\"amount\":10,\"cellId\":1},{\"id\":3,\"name\":\"kartoshka\",\"amount\":10,\"cellId\":2},{\"id\":4,\"name\":\"kartoshka\",\"amount\":10,\"cellId\":3},{\"id\":5,\"name\":\"\",\"amount\":0,\"cellId\":4},{\"id\":6,\"name\":\"\",\"amount\":0,\"cellId\":5},{\"id\":7,\"name\":\"\",\"amount\":0,\"cellId\":6},{\"id\":8,\"name\":\"\",\"amount\":0,\"cellId\":7},{\"id\":9,\"name\":\"kartoshka\",\"amount\":10,\"cellId\":8},{\"id\":10,\"name\":\"kartoshka\",\"amount\":10,\"cellId\":9},{\"id\":11,\"name\":\"\",\"amount\":0,\"cellId\":10}]}],\"carriages\":[{\"id\":2,\"items\":[{\"id\":12,\"name\":\"kartoshka\",\"amount\":20,\"cellId\":0},{\"id\":13,\"name\":\"kartoshka\",\"amount\":10,\"cellId\":2},{\"id\":14,\"name\":\"\",\"amount\":0,\"cellId\":3},{\"id\":15,\"name\":\"\",\"amount\":0,\"cellId\":4},{\"id\":16,\"name\":\"kartoshka\",\"amount\":10,\"cellId\":5}]}],\"characters\":[{\"id\":3,\"items\":[{\"id\":17,\"name\":\"kartoshka\",\"amount\":20,\"cellId\":0},{\"id\":18,\"name\":\"\",\"amount\":\"\",\"cellId\":1},{\"id\":19,\"name\":\"kartoshka\",\"amount\":10,\"cellId\":2}]}]}";
+    string _json = "{\"locomotives\":[{\"id\":1,\"items\":[{\"id\":1,\"name\":\"\",\"amount\":0,\"cellId\":0},{\"id\":2,\"name\":\"Gear\",\"amount\":10,\"cellId\":1},{\"id\":3,\"name\":\"Gear\",\"amount\":10,\"cellId\":2},{\"id\":4,\"name\":\"Gear\",\"amount\":10,\"cellId\":3},{\"id\":5,\"name\":\"\",\"amount\":0,\"cellId\":4},{\"id\":6,\"name\":\"\",\"amount\":0,\"cellId\":5},{\"id\":7,\"name\":\"\",\"amount\":0,\"cellId\":6},{\"id\":8,\"name\":\"\",\"amount\":0,\"cellId\":7},{\"id\":9,\"name\":\"Gear\",\"amount\":10,\"cellId\":8},{\"id\":10,\"name\":\"Gear\",\"amount\":10,\"cellId\":9},{\"id\":11,\"name\":\"\",\"amount\":0,\"cellId\":10}]}],\"carriages\":[{\"id\":2,\"items\":[{\"id\":12,\"name\":\"Gear\",\"amount\":20,\"cellId\":0},{\"id\":13,\"name\":\"Gear\",\"amount\":10,\"cellId\":2},{\"id\":14,\"name\":\"\",\"amount\":0,\"cellId\":3},{\"id\":15,\"name\":\"\",\"amount\":0,\"cellId\":4},{\"id\":16,\"name\":\"Gear\",\"amount\":10,\"cellId\":5}]}],\"characters\":[{\"id\":3,\"items\":[{\"id\":17,\"name\":\"Gear\",\"amount\":20,\"cellId\":0},{\"id\":18,\"name\":\"\",\"amount\":\"\",\"cellId\":1},{\"id\":19,\"name\":\"Gear\",\"amount\":10,\"cellId\":2}]}]}";
 
     NInventory _locomotiveInventory;
     NInventory[] _characterInventories;
@@ -21,9 +21,6 @@ public class TrainInventoryAgent : MonoBehaviour
     {
         //HttpController.instance.GET("/api/inventories", GetCallback);
         GetCallback(_json);
-        Item item = ItemSystem.GetItem("Coal");
-        Debug.Log(item.Name);
-        Debug.Log(item.Icon);
     }
 
     /// <summary>
@@ -52,8 +49,7 @@ public class TrainInventoryAgent : MonoBehaviour
             foreach(var it in instance.items)
             {
                 var tmp = Instantiate(item, i.transform);
-                tmp.GetComponent<InventoryItem>().id = it.id;
-                tmp.GetComponentInChildren<Text>().text = it.name + " - " + it.amount;
+                tmp.GetComponent<InventoryItem>().Init(it.id, it.name, it.amount);
             }
         }
 
@@ -62,8 +58,7 @@ public class TrainInventoryAgent : MonoBehaviour
         foreach (var it in _locomotiveInventory.items)
         {
             var tmp = Instantiate(item, i.transform);
-            tmp.GetComponent<InventoryItem>().id = it.id;
-            tmp.GetComponentInChildren<Text>().text = it.name + " - " + it.amount;
+            tmp.GetComponent<InventoryItem>().Init(it.id, it.name, it.amount);
         }
 
         foreach (var instance in _carriageInventories)
@@ -72,8 +67,7 @@ public class TrainInventoryAgent : MonoBehaviour
             foreach (var it in instance.items)
             {
                 var tmp = Instantiate(item, i.transform);
-                tmp.GetComponent<InventoryItem>().id = it.id;
-                tmp.GetComponentInChildren<Text>().text = it.name + " - " + it.amount;
+                tmp.GetComponent<InventoryItem>().Init(it.id, it.name, it.amount);
             }
         }
     }
