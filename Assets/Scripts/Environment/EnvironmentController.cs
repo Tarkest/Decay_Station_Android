@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class EnvironmentController : MonoBehaviour
 {
@@ -6,6 +7,9 @@ public class EnvironmentController : MonoBehaviour
     public EnvironmentData currentEnvironment;
     public EnvironmentData nextEnvironment;
     private int _environmentLenght;
+    private List<GameObject> _layers = new List<GameObject>();
+    private EnvironmentSplice _splice;
+    private float _trainLenght;
 
     private void Start()
     {
@@ -15,11 +19,42 @@ public class EnvironmentController : MonoBehaviour
     public void LoadEnvironment(string environmentName, float trainLenght)
     {
         currentEnvironment = Resources.Load<EnvironmentData>("Environments/Train/" + environmentName);
-        _environmentLenght = (int)Mathf.Ceil(trainLenght / currentEnvironment.size) + 2;
+        _trainLenght = trainLenght;
+
+        InstantiateLayers();
+    }
+
+    public void ChangeEnvironment(string environmentName)
+    {
+        nextEnvironment = Resources.Load<EnvironmentData>("Environments/Train/" + environmentName);
+        InstantiateSplice();
+    }
+
+    public void ReloadEnvironment()
+    {
+        ClearLayers();
+        currentEnvironment = nextEnvironment;
+        InstantiateLayers();
+        _splice.EndSplice();
+    }
+
+    public void ChangeSpeed(float value)
+    {
+        currentSpeed += value;
+    }
+
+    public void ChangeEnvironment()
+    {
+        ChangeEnvironment(nextEnvironment.name);
+    }
+
+    private void InstantiateLayers()
+    {
+        _environmentLenght = (int)Mathf.Ceil(_trainLenght / currentEnvironment.size) + 2;
 
         LoadLayers(0, 10);
 
-        if(currentEnvironment.railsBackground.notEmpty)
+        if (currentEnvironment.railsBackground.notEmpty)
             InstantiateLayer(currentEnvironment.railsBackground, 10);
 
         if (currentEnvironment.rails.notEmpty)
@@ -29,16 +64,6 @@ public class EnvironmentController : MonoBehaviour
             InstantiateLayer(currentEnvironment.railsForeground, 19);
 
         LoadLayers(20, 30);
-    }
-
-    public void ChangeEnvironment()
-    {
-
-    }
-
-    public void ChangeSpeed(float value)
-    {
-        currentSpeed += value;
     }
 
     private void LoadLayers(int from, int to)
@@ -53,6 +78,15 @@ public class EnvironmentController : MonoBehaviour
         }
     }
 
+    private void ClearLayers()
+    {
+        foreach(GameObject lay in _layers)
+        {
+            Destroy(lay);
+        }
+        _layers.Clear();
+    }
+
     private void InstantiateLayer(EnvironmentLayerData layerData, int layerIndex)
     {
         GameObject _buffer = new GameObject(layerIndex + " layer");
@@ -60,5 +94,16 @@ public class EnvironmentController : MonoBehaviour
         _buffer.transform.parent = transform;
         EnvironmentLayer _layerBuffer = _buffer.AddComponent<EnvironmentLayer>();
         _layerBuffer.LoadLayer(layerData, layerIndex, _environmentLenght, this);
+        _layers.Add(_buffer);
+    }
+
+    private void InstantiateSplice()
+    {
+        GameObject _buffer = new GameObject("Splice layer");
+        _buffer.transform.position = Vector3.zero;
+        _buffer.transform.parent = transform;
+        EnvironmentSplice _layerBuffer = _buffer.AddComponent<EnvironmentSplice>();
+        _layerBuffer.BeginSplice(currentEnvironment.environmentSplice, this);
+        _splice = _layerBuffer;
     }
 }

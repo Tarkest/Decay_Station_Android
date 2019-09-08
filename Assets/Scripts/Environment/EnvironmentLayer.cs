@@ -2,8 +2,8 @@
 
 public class EnvironmentLayer : MonoBehaviour
 {
-    private float _startPos, _layerLenght, _parallaxEffect;
-    private int _layerIndex;
+    private float _layerLenght, _parallaxEffect;
+    private int _layerIndex, _size;
     private EnvironmentLayerData _layerData;
     private EnvironmentController _parent;
 
@@ -14,7 +14,9 @@ public class EnvironmentLayer : MonoBehaviour
         _layerLenght = layerData.size;
         _parallaxEffect = layerIndex;
         _layerIndex = layerIndex;
-        for (int i = -1; i < size-1; i++)
+        _size = size - 1;
+
+        for (int i = -1; i < _size; i++)
         {
             InstantiateLayerInstance(_layerData, i, _layerIndex, _layerLenght);
         }
@@ -23,6 +25,7 @@ public class EnvironmentLayer : MonoBehaviour
     void FixedUpdate()
     {
         float _distance = 0;
+
         if (_parent.currentSpeed > 0)
         {
             _distance = (-_parent.currentSpeed - _layerData.staticMoveSpeed) * _parallaxEffect * Time.fixedDeltaTime;
@@ -31,15 +34,16 @@ public class EnvironmentLayer : MonoBehaviour
         {
             _distance = -_layerData.staticMoveSpeed * _parallaxEffect * Time.fixedDeltaTime;
         }
+
         for (int i = 0; i < transform.childCount; i++)
         {
             Transform _childTransform = transform.GetChild(i);
             _childTransform.position = new Vector3(_childTransform.position.x + _distance, transform.position.y, transform.position.z);
         }
 
-        if (transform.GetChild(0).position.x + _distance <= 0)
+        Transform _lastChild = transform.GetChild(transform.childCount - 1);
+        if (_lastChild.position.x + _distance <= -_size * _layerLenght)
         {
-            Transform _lastChild = transform.GetChild(transform.childCount - 1);
             _lastChild.position = new Vector3(transform.GetChild(0).position.x + _layerLenght, transform.position.y, transform.position.z);
             _lastChild.SetSiblingIndex(0);
             _lastChild.gameObject.GetComponent<SpriteRenderer>().sprite = _layerData.GetSprite();

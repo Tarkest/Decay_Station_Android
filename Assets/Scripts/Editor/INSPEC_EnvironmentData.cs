@@ -10,7 +10,8 @@ public class INSPEC_EnvironmentData : Editor
     SerializedProperty _environmentRailsBackground;
     SerializedProperty _environmentRails;
     SerializedProperty _environmentRailsForeground;
-    AnimBool[] _showArray = new AnimBool[24];
+    SerializedProperty _environmentSplice;
+    AnimBool[] _showArray = new AnimBool[25];
 
     private void OnEnable()
     {
@@ -18,7 +19,8 @@ public class INSPEC_EnvironmentData : Editor
         _environmentRailsBackground = serializedObject.FindProperty("railsBackground");
         _environmentRails = serializedObject.FindProperty("rails");
         _environmentRailsForeground = serializedObject.FindProperty("railsForeground");
-        for (int i = 0; i < 24; i++)
+        _environmentSplice = serializedObject.FindProperty("environmentSplice");
+        for (int i = 0; i < 25; i++)
         {
             _showArray[i] = new AnimBool(false);
             _showArray[i].valueChanged.AddListener(Repaint);
@@ -94,7 +96,7 @@ public class INSPEC_EnvironmentData : Editor
         if (BeginFadeGroup(_showArray[11].faded))
         {
             BeginVertical("box");
-            for (int sprI = 0; sprI < _environmentRailsBackground.FindPropertyRelative("variation").arraySize; sprI++)
+            for (int sprI = 0; sprI < _environmentRails.FindPropertyRelative("variation").arraySize; sprI++)
             {
                 BeginHorizontal();
                 ObjectField(_environmentRails.FindPropertyRelative("variation").GetArrayElementAtIndex(sprI), typeof(Sprite), new GUIContent($"{sprI + 1} variation"));
@@ -174,6 +176,18 @@ public class INSPEC_EnvironmentData : Editor
             EndFadeGroup();
             EndFoldoutHeaderGroup();
         }
+        Space();
+        _showArray[24].target = BeginFoldoutHeaderGroup(_showArray[24].target, $"Splice");
+        if (BeginFadeGroup(_showArray[24].faded))
+        {
+            BeginVertical("box");
+                    ObjectField(_environmentSplice.FindPropertyRelative("sprites").GetArrayElementAtIndex(0), typeof(Sprite), new GUIContent($"Start sprite"));
+                    ObjectField(_environmentSplice.FindPropertyRelative("sprites").GetArrayElementAtIndex(1), typeof(Sprite), new GUIContent($"Middle sprite"));
+                    ObjectField(_environmentSplice.FindPropertyRelative("sprites").GetArrayElementAtIndex(2), typeof(Sprite), new GUIContent($"End sprite"));
+            EndVertical();
+        }
+        EndFadeGroup();
+        EndFoldoutHeaderGroup();
         serializedObject.ApplyModifiedProperties();
     }
 }
