@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class EnvironmentSplice : MonoBehaviour
 {
@@ -6,12 +7,20 @@ public class EnvironmentSplice : MonoBehaviour
     private EnvironmentController _parent;
     private float _layerLenght, _parallaxEffect = 30f;
     private bool _ending, _ended;
+    private Action _reloadCallback;
 
-    public void BeginSplice(EnvironmentSpliceLayer spliceData, EnvironmentController parent)
+    /// <summary>
+    /// Method for instantiating and load splice GameObject
+    /// </summary>
+    /// <param name="spliceData">Data object from environment data</param>
+    /// <param name="parent">Environment contoller object</param>
+    /// <param name="callback">Method what will be invoked when splice is ended</param>
+    public void BeginSplice(EnvironmentSpliceLayer spliceData, EnvironmentController parent, Action callback)
     {
         _spliceData = spliceData;
         _layerLenght = spliceData.size;
         _parent = parent;
+        _reloadCallback = callback;
         for(int i = 1; i < 4; i++)
         {
             InstantiateSpliceInstance(_spliceData, i, i == 1 ? 0 : 1, _layerLenght);
@@ -20,6 +29,9 @@ public class EnvironmentSplice : MonoBehaviour
         _ending = false;
     }
 
+    /// <summary>
+    /// Method what will start splice destroying sequence
+    /// </summary>
     public void EndSplice()
     {
         _ending = true;
@@ -63,12 +75,20 @@ public class EnvironmentSplice : MonoBehaviour
             else
             {
                 _lastChild.position = new Vector3(transform.GetChild(0).position.x + _layerLenght, transform.position.y, transform.position.z);
+                _lastChild.SetSiblingIndex(0);
                 _lastChild.gameObject.GetComponent<SpriteRenderer>().sprite = _spliceData.sprites[1];
-                _parent.ReloadEnvironment();
+                _reloadCallback();
             }
         }
     }
 
+    /// <summary>
+    /// Method what instantiate and initialize graphic GameObject instance on splice layer
+    /// </summary>
+    /// <param name="data">Data object from environment data</param>
+    /// <param name="instanceIndex">Index of instance from left to right</param>
+    /// <param name="instanceType">Index of sprite for this instance (0 - start, 1 - middle, 2 - end)</param>
+    /// <param name="layerLenght">Layer sprite size</param>
     private void InstantiateSpliceInstance(EnvironmentSpliceLayer data, int instanceIndex, int instanceType, float layerLenght)
     {
         GameObject _buffer = new GameObject(instanceIndex + " splice instance");

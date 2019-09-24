@@ -7,6 +7,13 @@ public class EnvironmentLayer : MonoBehaviour
     private EnvironmentLayerData _layerData;
     private EnvironmentController _parent;
 
+    /// <summary>
+    /// Method for instantiating and load layer GameObject
+    /// </summary>
+    /// <param name="layerData">Data object from environment data</param>
+    /// <param name="layerIndex">Layer index what depends on its render order</param>
+    /// <param name="size">Amount of object for covering whole train view</param>
+    /// <param name="parent">Environment contoller object</param>
     public void LoadLayer(EnvironmentLayerData layerData, int layerIndex, int size, EnvironmentController parent)
     {
         _parent = parent;
@@ -50,6 +57,13 @@ public class EnvironmentLayer : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Method what instantiate and initialize graphic GameObject instance on specific layer
+    /// </summary>
+    /// <param name="data">Data object from environment data</param>
+    /// <param name="instanceIndex">Index of instance from left to right</param>
+    /// <param name="layerIndex">Layer index what depends on its render order</param>
+    /// <param name="layerLenght">Layer sprite size</param>
     private void InstantiateLayerInstance(EnvironmentLayerData data, int instanceIndex, int layerIndex, float layerLenght)
     {
         GameObject _buffer = new GameObject(instanceIndex + 1 + " instance");
