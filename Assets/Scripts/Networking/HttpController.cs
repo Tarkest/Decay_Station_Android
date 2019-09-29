@@ -46,12 +46,22 @@ public class HttpController : MonoBehaviour
     public IEnumerator GETRequest(string path, Callback callback) {
         UnityWebRequest request = UnityWebRequest.Get(StaticClasses.SERVER_ADRESS+"/"+path);
         if (PlayerPrefs.HasKey("accountKey"))
+        {
             request.SetRequestHeader("auth", PlayerPrefs.GetString("accountKey"));
+            if (PlayerPrefs.HasKey("accountGoogleKey"))
+            {
+                request.SetRequestHeader("authGoogle", PlayerPrefs.GetString("accountGoogleKey"));
+            }
+        }
         else
         {
             PlayerPrefs.SetString("accountKey", GenerateAccountKey());
             request.SetRequestHeader("auth", PlayerPrefs.GetString("accountKey"));
             PlayerPrefs.Save();
+            if (PlayerPrefs.HasKey("accountGoogleKey"))
+            {
+                request.SetRequestHeader("authGoogle", PlayerPrefs.GetString("accountGoogleKey"));
+            }
         }     
         yield return request.SendWebRequest();
 
