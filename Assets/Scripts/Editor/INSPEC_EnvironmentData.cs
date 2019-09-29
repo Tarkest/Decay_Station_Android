@@ -10,8 +10,8 @@ public class INSPEC_EnvironmentData : Editor
     SerializedProperty _environmentRailsBackground;
     SerializedProperty _environmentRails;
     SerializedProperty _environmentRailsForeground;
-    AnimBool[] _showArray = new AnimBool[24];
-    EnvironmentData data;
+    SerializedProperty _environmentSplice;
+    AnimBool[] _showArray = new AnimBool[25];
 
     private void OnEnable()
     {
@@ -19,7 +19,8 @@ public class INSPEC_EnvironmentData : Editor
         _environmentRailsBackground = serializedObject.FindProperty("railsBackground");
         _environmentRails = serializedObject.FindProperty("rails");
         _environmentRailsForeground = serializedObject.FindProperty("railsForeground");
-        for (int i = 0; i < 24; i++)
+        _environmentSplice = serializedObject.FindProperty("environmentSplice");
+        for (int i = 0; i < 25; i++)
         {
             _showArray[i] = new AnimBool(false);
             _showArray[i].valueChanged.AddListener(Repaint);
@@ -43,14 +44,24 @@ public class INSPEC_EnvironmentData : Editor
                     if (GUILayout.Button("X"))
                     {
                         _environmentSprites.GetArrayElementAtIndex(i).FindPropertyRelative("variation").DeleteArrayElementAtIndex(sprI);
-                        _environmentSprites.GetArrayElementAtIndex(i).FindPropertyRelative("variation").DeleteArrayElementAtIndex(sprI);
                     }
                     EndHorizontal();
                 }
+                Space();
                 if (GUILayout.Button("Add variation"))
                 {
                     _environmentSprites.GetArrayElementAtIndex(i).FindPropertyRelative("variation").InsertArrayElementAtIndex(_environmentSprites.GetArrayElementAtIndex(i).FindPropertyRelative("variation").arraySize);
                 }
+                Space();
+                BeginHorizontal();
+                if (_environmentSprites.GetArrayElementAtIndex(i).FindPropertyRelative("isMovingWhenStatic").boolValue = Toggle(new GUIContent("Moving when static", "Check if layer must move when train static"), _environmentSprites.GetArrayElementAtIndex(i).FindPropertyRelative("isMovingWhenStatic").boolValue))
+                {
+                    _environmentSprites.GetArrayElementAtIndex(i).FindPropertyRelative("staticMoveSpeed").floatValue = FloatField(new GUIContent("Move speed", "Speed with what layer will move"), _environmentSprites.GetArrayElementAtIndex(i).FindPropertyRelative("staticMoveSpeed").floatValue);
+                }
+                EndHorizontal();
+                if (_environmentSprites.GetArrayElementAtIndex(i).FindPropertyRelative("isMovingWhenStatic").boolValue && _environmentSprites.GetArrayElementAtIndex(i).FindPropertyRelative("staticMoveSpeed").floatValue <= 0)
+                    HelpBox("Move speed must be higher then 0", MessageType.Error, true);
+                Space();
                 EndVertical();
             }
             EndFadeGroup();
@@ -69,10 +80,10 @@ public class INSPEC_EnvironmentData : Editor
                 if (GUILayout.Button("X"))
                 {
                     _environmentRailsBackground.FindPropertyRelative("variation").DeleteArrayElementAtIndex(sprI);
-                    _environmentRailsBackground.FindPropertyRelative("variation").DeleteArrayElementAtIndex(sprI);
                 }
                 EndHorizontal();
             }
+            Space();
             if (GUILayout.Button("Add variation"))
             {
                 _environmentRailsBackground.FindPropertyRelative("variation").InsertArrayElementAtIndex(_environmentRailsBackground.FindPropertyRelative("variation").arraySize);
@@ -85,17 +96,17 @@ public class INSPEC_EnvironmentData : Editor
         if (BeginFadeGroup(_showArray[11].faded))
         {
             BeginVertical("box");
-            for (int sprI = 0; sprI < _environmentRailsBackground.FindPropertyRelative("variation").arraySize; sprI++)
+            for (int sprI = 0; sprI < _environmentRails.FindPropertyRelative("variation").arraySize; sprI++)
             {
                 BeginHorizontal();
                 ObjectField(_environmentRails.FindPropertyRelative("variation").GetArrayElementAtIndex(sprI), typeof(Sprite), new GUIContent($"{sprI + 1} variation"));
                 if (GUILayout.Button("X"))
                 {
                     _environmentRails.FindPropertyRelative("variation").DeleteArrayElementAtIndex(sprI);
-                    _environmentRails.FindPropertyRelative("variation").DeleteArrayElementAtIndex(sprI);
                 }
                 EndHorizontal();
             }
+            Space();
             if (GUILayout.Button("Add variation"))
             {
                 _environmentRails.FindPropertyRelative("variation").InsertArrayElementAtIndex(_environmentRails.FindPropertyRelative("variation").arraySize);
@@ -115,10 +126,10 @@ public class INSPEC_EnvironmentData : Editor
                 if (GUILayout.Button("X"))
                 {
                     _environmentRailsForeground.FindPropertyRelative("variation").DeleteArrayElementAtIndex(sprI);
-                    _environmentRailsForeground.FindPropertyRelative("variation").DeleteArrayElementAtIndex(sprI);
                 }
                 EndHorizontal();
             }
+            Space();
             if (GUILayout.Button("Add variation"))
             {
                 _environmentRailsForeground.FindPropertyRelative("variation").InsertArrayElementAtIndex(_environmentRailsForeground.FindPropertyRelative("variation").arraySize);
@@ -142,19 +153,41 @@ public class INSPEC_EnvironmentData : Editor
                     if (GUILayout.Button("X"))
                     {
                         _environmentSprites.GetArrayElementAtIndex(i).FindPropertyRelative("variation").DeleteArrayElementAtIndex(sprI);
-                        _environmentSprites.GetArrayElementAtIndex(i).FindPropertyRelative("variation").DeleteArrayElementAtIndex(sprI);
                     }
                     EndHorizontal();
                 }
+                Space();
                 if (GUILayout.Button("Add variation"))
                 {
                     _environmentSprites.GetArrayElementAtIndex(i).FindPropertyRelative("variation").InsertArrayElementAtIndex(_environmentSprites.GetArrayElementAtIndex(i).FindPropertyRelative("variation").arraySize);
                 }
+                Space();
+                BeginHorizontal();
+                if (_environmentSprites.GetArrayElementAtIndex(i).FindPropertyRelative("isMovingWhenStatic").boolValue = Toggle(new GUIContent("Moving when static", "Check if layer must move when train static"), _environmentSprites.GetArrayElementAtIndex(i).FindPropertyRelative("isMovingWhenStatic").boolValue))
+                {
+                    _environmentSprites.GetArrayElementAtIndex(i).FindPropertyRelative("staticMoveSpeed").floatValue = FloatField(new GUIContent("MoveSpeed", "Speed with what layer will move"), _environmentSprites.GetArrayElementAtIndex(i).FindPropertyRelative("staticMoveSpeed").floatValue);
+                }
+                EndHorizontal();
+                if (_environmentSprites.GetArrayElementAtIndex(i).FindPropertyRelative("isMovingWhenStatic").boolValue && _environmentSprites.GetArrayElementAtIndex(i).FindPropertyRelative("staticMoveSpeed").floatValue <= 0)
+                    HelpBox("Move speed must be higher then 0", MessageType.Error, true);
+                Space();
                 EndVertical();
             }
             EndFadeGroup();
             EndFoldoutHeaderGroup();
         }
+        Space();
+        _showArray[24].target = BeginFoldoutHeaderGroup(_showArray[24].target, $"Splice");
+        if (BeginFadeGroup(_showArray[24].faded))
+        {
+            BeginVertical("box");
+                    ObjectField(_environmentSplice.FindPropertyRelative("sprites").GetArrayElementAtIndex(0), typeof(Sprite), new GUIContent($"Start sprite"));
+                    ObjectField(_environmentSplice.FindPropertyRelative("sprites").GetArrayElementAtIndex(1), typeof(Sprite), new GUIContent($"Middle sprite"));
+                    ObjectField(_environmentSplice.FindPropertyRelative("sprites").GetArrayElementAtIndex(2), typeof(Sprite), new GUIContent($"End sprite"));
+            EndVertical();
+        }
+        EndFadeGroup();
+        EndFoldoutHeaderGroup();
         serializedObject.ApplyModifiedProperties();
     }
 }
