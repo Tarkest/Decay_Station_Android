@@ -3,7 +3,7 @@
 [RequireComponent(typeof(SpriteRenderer), typeof(BoxCollider2D))]
 public class LocomotiveAgent : TrainAgent
 {
-    private int _id;
+    public int id;
     private int _level;
     public Sprite[] sprites;
     public Vector3[] buildingsPositions;
@@ -16,7 +16,7 @@ public class LocomotiveAgent : TrainAgent
     /// <param name="info">Locomotive data from account</param>
     public void LoadInstance(Locomotive info)
     {
-        _id = info.id;
+        id = info.id;
         _level = info.level;
         _sr.sprite = sprites[_level - 1];
         if(foreground != null)
@@ -29,6 +29,17 @@ public class LocomotiveAgent : TrainAgent
             TrainBuilding instance = (Instantiate(Resources.Load("Locomotive/Buildings/Outer/" + info.outer[i].name), buildingsPositions[i], Quaternion.identity) as GameObject).GetComponent<TrainBuilding>();
             instance.LoadInstance(info.outer[i]);
             _currentBuildings[i] = instance;
+        }
+    }
+
+    /// <summary>
+    /// Destroy all train buildings
+    /// </summary>
+    public void ResetBuilding()
+    {
+        foreach(TrainBuilding inst in _currentBuildings)
+        {
+            Destroy(inst.gameObject);
         }
     }
 }
