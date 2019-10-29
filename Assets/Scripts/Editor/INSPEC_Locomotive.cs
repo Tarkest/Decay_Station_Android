@@ -82,7 +82,10 @@ public class INSPEC_Locomotive : Editor
         }
         EndFadeGroup();
         EndFoldoutHeaderGroup();
-        serializedObject.ApplyModifiedProperties();
+        if(serializedObject.hasModifiedProperties)
+        {
+            serializedObject.ApplyModifiedProperties();
+        }
     }
 
     private void OnSceneGUI()

@@ -97,7 +97,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &909677861
 Transform:
   m_ObjectHideFlags: 0
@@ -242,7 +242,7 @@ SpriteRenderer:
   m_Size: {x: 3, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!95 &6548052031644592294
@@ -356,7 +356,7 @@ SpriteRenderer:
   m_Size: {x: 3, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!95 &2497865737709975681
@@ -522,7 +522,7 @@ EdgeCollider2D:
   m_EdgeRadius: 0
   m_Points:
   - {x: -9.25, y: -0.6249962}
-  - {x: -8.26562, y: -0.6249962}
+  - {x: -8.249999, y: -0.6249798}
   - {x: -7, y: -0.849375}
 --- !u!68 &2249482713170868862
 EdgeCollider2D:
@@ -541,7 +541,7 @@ EdgeCollider2D:
   m_EdgeRadius: 0
   m_Points:
   - {x: 9.25, y: -0.6249962}
-  - {x: 8.26562, y: -0.6249962}
+  - {x: 8.249997, y: -0.62500525}
   - {x: 7, y: -0.849375}
 --- !u!114 &8939827165082668376
 MonoBehaviour:
