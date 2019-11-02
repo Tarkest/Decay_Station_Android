@@ -11,7 +11,7 @@ public class EDITOR_ServerData : EditorWindow
 {
     #region Render Variables
 
-    private Vector2 instancesViewPos;
+    private Vector2 _instancesViewPos;
 
     private string _instancesFilter = "";
     private int _selectedLocomotiveInstanceIndex = -1;
@@ -20,6 +20,7 @@ public class EDITOR_ServerData : EditorWindow
 
     private string _newName = "";
     private bool _locomotiveCreateMode = false;
+    private bool _locomotiveUpgradesEdit = false;
     private bool _carriageCreateMode = false;
     private bool _itemsCreateMode = false;
 
@@ -63,6 +64,7 @@ public class EDITOR_ServerData : EditorWindow
 
     private string TestLocoJson = "{\"items\":[{\"name\":\"Coffin\",\"appearenceVersion\":\"0000001\"}]}";
     private string TestCarriageJson = "{\"items\":[{\"name\":\"passenger\",\"appearenceVersion\":\"0000001\"}]}";
+    private string TestItemsJson = "{\"items\":[{\"name\":\"passenger\",\"appearenceVersion\":\"0000001\"}]}";
 
     [MenuItem("Editors/Serverdata")]
     public static void ShowLocomotiveEditorWindow()
@@ -99,6 +101,10 @@ public class EDITOR_ServerData : EditorWindow
                         break;
 
                         case 2:
+                            if (_lastSelectedModels != _currentSelectedModels)
+                            {
+                                BeginLoadItems();
+                            }
                             RenderItems();
                         break;
 
@@ -107,7 +113,7 @@ public class EDITOR_ServerData : EditorWindow
                         break;
 
                         case 4:
-                            RenderNPC();
+                            RenderRecipes();
                         break;
 
                         case 5:
@@ -158,84 +164,108 @@ public class EDITOR_ServerData : EditorWindow
         }
         if (_locomotiveLoaded)
         {
-            if (_locomotiveCreateMode)
+            if (_locomotiveUpgradesEdit)
             {
-                LabelField("Name of new locomotive");
-                _newName = TextArea(_newName);
-                if (GUILayout.Button("Create"))
+                _instancesViewPos = BeginScrollView(_instancesViewPos, GUILayout.ExpandHeight(true), GUILayout.ExpandWidth(true));
+                LocomotiveUpgradeRecipe[] _buffer = _localLocomotiveData[_selectedLocomotiveInstanceIndex].serverData.upgradesRecipes;
+                BeginHorizontal();
+                for (int i = 0; i < 5; i++)
                 {
-                    _instanceBuffer = new GameObject(_newName, typeof(SpriteRenderer), typeof(BoxCollider2D), typeof(EdgeCollider2D), typeof(LocomotiveAgent));
-                    GameObject _foreground = new GameObject("Foreground", typeof(SpriteRenderer), typeof(LocomotiveForeground));
-                    GameObject _wheels1 = new GameObject("Wheel 1", typeof(SpriteRenderer), typeof(Animator), typeof(TrainWheels));
-                    GameObject _wheels2 = new GameObject("Wheel 2", typeof(SpriteRenderer), typeof(Animator), typeof(TrainWheels));
-                    _foreground.transform.SetParent(_instanceBuffer.transform);
-                    _wheels1.transform.SetParent(_instanceBuffer.transform);
-                    _wheels2.transform.SetParent(_instanceBuffer.transform);
-                    _foreground.transform.SetSiblingIndex(0);
-                    _wheels1.transform.SetSiblingIndex(1);
-                    _wheels2.transform.SetSiblingIndex(2);
-                    //EDITOR_Untility.POST("Get Locomotives route", JsonUtility.ToJson(new LocomotiveType()), LocomotiveCreateCallBack, _authToken);
+                    for (int item = 0; item < _buffer[i].items.Length; item++)
+                    {
+                        BeginHorizontal("box");
+                        if(GUILayout.Button(_buffer[i].items[item].itemName))
+                        {
+                            Debug.Log("Open Items Menu");
+                        }
+                        _buffer[i].items[item].count = IntSlider(_buffer[i].items[item].count, 0, 500);
+                        EndHorizontal();
+                    }
                 }
-                if (GUILayout.Button("Cancel"))
-                {
-                    _locomotiveCreateMode = false;
-                    _newName = "";
-                }
+                EndHorizontal();
+                EndScrollView();
             }
             else
             {
-                _instancesFilter = TextField(_instancesFilter);
-                instancesViewPos = BeginScrollView(instancesViewPos, GUILayout.ExpandHeight(true), GUILayout.ExpandWidth(true));
-                if (_instancesFilter.Length > 0)
+                if (_locomotiveCreateMode)
                 {
-                    _localLocomotiveDataFiltered = (from _obj in _localLocomotiveData where _obj.prefab.name.ToLower().Contains(_instancesFilter.ToLower()) select _obj).ToArray();
-                    for (int _locoIndex = 0; _locoIndex < _localLocomotiveDataFiltered.Length; _locoIndex++)
+                    LabelField("Name of new locomotive");
+                    _newName = TextArea(_newName);
+                    if (GUILayout.Button("Create"))
                     {
-                        BeginVertical("box");
-                        if (GUILayout.Button(_localLocomotiveDataFiltered[_locoIndex].prefab.name))
-                        {
-                            _selectedLocomotiveInstanceIndex = Array.IndexOf(_localLocomotiveData, _localLocomotiveDataFiltered[_locoIndex]);
-                            AssetDatabase.OpenAsset(_localLocomotiveData[_selectedLocomotiveInstanceIndex].prefab);
-                        }
-                        if (_selectedLocomotiveInstanceIndex == Array.IndexOf(_localLocomotiveData, _localLocomotiveDataFiltered[_locoIndex]))
-                        {
-                            DrawOpenInfo(_localLocomotiveDataFiltered[_locoIndex]);
-                        }
-                        EndVertical();
+                        _instanceBuffer = new GameObject(_newName, typeof(SpriteRenderer), typeof(BoxCollider2D), typeof(EdgeCollider2D), typeof(LocomotiveAgent));
+                        GameObject _foreground = new GameObject("Foreground", typeof(SpriteRenderer), typeof(LocomotiveForeground));
+                        GameObject _wheels1 = new GameObject("Wheel 1", typeof(SpriteRenderer), typeof(Animator), typeof(TrainWheels));
+                        GameObject _wheels2 = new GameObject("Wheel 2", typeof(SpriteRenderer), typeof(Animator), typeof(TrainWheels));
+                        _foreground.transform.SetParent(_instanceBuffer.transform);
+                        _wheels1.transform.SetParent(_instanceBuffer.transform);
+                        _wheels2.transform.SetParent(_instanceBuffer.transform);
+                        _foreground.transform.SetSiblingIndex(0);
+                        _wheels1.transform.SetSiblingIndex(1);
+                        _wheels2.transform.SetSiblingIndex(2);
+                        //EDITOR_Untility.POST("Get Locomotives route", JsonUtility.ToJson(new LocomotiveType()), LocomotiveCreateCallBack, _authToken);
+                    }
+                    if (GUILayout.Button("Cancel"))
+                    {
+                        _locomotiveCreateMode = false;
+                        _newName = "";
                     }
                 }
                 else
                 {
-                    for (int _locoIndex = 0; _locoIndex < _localLocomotiveData.Length; _locoIndex++)
+                    _instancesFilter = TextField(_instancesFilter);
+                    _instancesViewPos = BeginScrollView(_instancesViewPos, GUILayout.ExpandHeight(true), GUILayout.ExpandWidth(true));
+                    if (_instancesFilter.Length > 0)
                     {
-                        if (_localLocomotiveData[_locoIndex].serverData != null && _localLocomotiveData[_locoIndex].prefab == null)
-                        {
-                            throw (new Exception("0"));
-                        }
-                        if (_localLocomotiveData[_locoIndex] != null)
+                        _localLocomotiveDataFiltered = (from _obj in _localLocomotiveData where _obj.prefab.name.ToLower().Contains(_instancesFilter.ToLower()) select _obj).ToArray();
+                        for (int _locoIndex = 0; _locoIndex < _localLocomotiveDataFiltered.Length; _locoIndex++)
                         {
                             BeginVertical("box");
-                            if (GUILayout.Button(_localLocomotiveData[_locoIndex].prefab.name))
+                            if (GUILayout.Button(_localLocomotiveDataFiltered[_locoIndex].prefab.name))
                             {
-                                _selectedLocomotiveInstanceIndex = _locoIndex;
+                                _selectedLocomotiveInstanceIndex = Array.IndexOf(_localLocomotiveData, _localLocomotiveDataFiltered[_locoIndex]);
                                 AssetDatabase.OpenAsset(_localLocomotiveData[_selectedLocomotiveInstanceIndex].prefab);
                             }
-                            if (_selectedLocomotiveInstanceIndex == _locoIndex)
+                            if (_selectedLocomotiveInstanceIndex == Array.IndexOf(_localLocomotiveData, _localLocomotiveDataFiltered[_locoIndex]))
                             {
-                                DrawOpenInfo(_localLocomotiveData[_selectedLocomotiveInstanceIndex]);
+                                DrawOpenInfo(_localLocomotiveDataFiltered[_locoIndex]);
                             }
                             EndVertical();
                         }
-                        else
+                    }
+                    else
+                    {
+                        for (int _locoIndex = 0; _locoIndex < _localLocomotiveData.Length; _locoIndex++)
                         {
-                            BeginLoadLocomotives();
+                            if (_localLocomotiveData[_locoIndex].serverData != null && _localLocomotiveData[_locoIndex].prefab == null)
+                            {
+                                throw (new Exception("0"));
+                            }
+                            if (_localLocomotiveData[_locoIndex] != null)
+                            {
+                                BeginVertical("box");
+                                if (GUILayout.Button(_localLocomotiveData[_locoIndex].prefab.name))
+                                {
+                                    _selectedLocomotiveInstanceIndex = _locoIndex;
+                                    AssetDatabase.OpenAsset(_localLocomotiveData[_selectedLocomotiveInstanceIndex].prefab);
+                                }
+                                if (_selectedLocomotiveInstanceIndex == _locoIndex)
+                                {
+                                    DrawOpenInfo(_localLocomotiveData[_selectedLocomotiveInstanceIndex]);
+                                }
+                                EndVertical();
+                            }
+                            else
+                            {
+                                BeginLoadLocomotives();
+                            }
                         }
                     }
-                }
-                EndScrollView();
-                if (GUILayout.Button(new GUIContent("Create instance", "Create new local locomotive instence")))
-                {
-                    _locomotiveCreateMode = true;
+                    EndScrollView();
+                    if (GUILayout.Button(new GUIContent("Create instance", "Create new local locomotive instence")))
+                    {
+                        _locomotiveCreateMode = true;
+                    }
                 }
             }
         }
@@ -286,7 +316,7 @@ public class EDITOR_ServerData : EditorWindow
             else
             {
                 _instancesFilter = TextField(_instancesFilter);
-                instancesViewPos = BeginScrollView(instancesViewPos, GUILayout.ExpandHeight(true), GUILayout.ExpandWidth(true));
+                _instancesViewPos = BeginScrollView(_instancesViewPos, GUILayout.ExpandHeight(true), GUILayout.ExpandWidth(true));
                 if (_instancesFilter.Length > 0)
                 {
                     _localCarriageDataFiltered = (from _obj in _localCarriageData where _obj.prefab.name.ToLower().Contains(_instancesFilter.ToLower()) select _obj).ToArray();
@@ -348,12 +378,16 @@ public class EDITOR_ServerData : EditorWindow
 
     private void RenderItems()
     {
-        if (!_carriageCreateMode)
+        if (!_itemsCreateMode)
         {
             if (GUILayout.Button("Refresh"))
             {
                 //EDITOR_Untility.GET("Get Carriages route", GetCarriageCallback, _authToken);
             }
+        }
+        if(_itemsLoaded)
+        {
+            
         }
     }
 
@@ -397,7 +431,7 @@ public class EDITOR_ServerData : EditorWindow
         LabelField(model.serverData.count + " instances is currently on server");
         if(GUILayout.Button("Edit upgrades recipes"))
         {
-            Debug.Log("Recipe editor");
+            _locomotiveUpgradesEdit = true;
         }
         BeginHorizontal();
         if (GUILayout.Button(new GUIContent("UPD", "Update locomotive instance on server")))
@@ -426,47 +460,54 @@ public class EDITOR_ServerData : EditorWindow
     private void DrawOpenInfo(CarriageModel model)
     {
         BeginVertical("box");
-        GUIStyle _statusStyle = new GUIStyle();
-        _statusStyle.richText = true;
-        BeginHorizontal();
-        LabelField(new GUIContent($"Server status: <color={ (model.serverData != null ? "#009900ff" : "#cf0000ff") }>{ (model.serverData != null ? "Loaded" : "Not Loaded") }</color>", "Locomotive state on server batabase"), _statusStyle, GUILayout.Width(85));
-        EndHorizontal();
-        LabelField("Associated with");
-        if (model.serverData.appearenceVersion.Length < 7)
+        if(_locomotiveUpgradesEdit)
         {
-            model.serverData.appearenceVersion += "0";
+
         }
-        if (model.serverData.appearenceVersion.Length > 7)
+        else
         {
-            model.serverData.appearenceVersion = model.serverData.appearenceVersion.Remove(6);
-        }
-        model.serverData.appearenceVersion = TextField(model.serverData.appearenceVersion.Insert(2, ".").Insert(5, ".")).Replace(".", "");
-        LabelField(model.serverData.count + " instances is currently on server");
-        if (GUILayout.Button("Edit assembly recipe"))
-        {
-            Debug.Log("Recipe editor");
-        }
-        BeginHorizontal();
-        if (GUILayout.Button(new GUIContent("UPD", "Update locomotive instance on server")))
-        {
-            Debug.Log("UPD");
-        }
-        if (GUILayout.Button(new GUIContent("REM", "Remove locomotive instance from server rotation")))
-        {
-            Debug.Log("REM");
-        }
-        if (GUILayout.Button(new GUIContent("DEL", "Delete locomotive instance from server and client")))
-        {
-            if (model.serverData.count > 0)
+            GUIStyle _statusStyle = new GUIStyle();
+            _statusStyle.richText = true;
+            BeginHorizontal();
+            LabelField(new GUIContent($"Server status: <color={ (model.serverData != null ? "#009900ff" : "#cf0000ff") }>{ (model.serverData != null ? "Loaded" : "Not Loaded") }</color>", "Locomotive state on server batabase"), _statusStyle, GUILayout.Width(85));
+            EndHorizontal();
+            LabelField("Associated with");
+            if (model.serverData.appearenceVersion.Length < 7)
             {
-                Debug.Log("Cant delete object");
+                model.serverData.appearenceVersion += "0";
             }
-            else
+            if (model.serverData.appearenceVersion.Length > 7)
             {
-                Debug.Log("Deleted");
+                model.serverData.appearenceVersion = model.serverData.appearenceVersion.Remove(6);
             }
+            model.serverData.appearenceVersion = TextField(model.serverData.appearenceVersion.Insert(2, ".").Insert(5, ".")).Replace(".", "");
+            LabelField(model.serverData.count + " instances is currently on server");
+            if (GUILayout.Button("Edit assembly recipe"))
+            {
+                Debug.Log("Recipe editor");
+            }
+            BeginHorizontal();
+            if (GUILayout.Button(new GUIContent("UPD", "Update locomotive instance on server")))
+            {
+                Debug.Log("UPD");
+            }
+            if (GUILayout.Button(new GUIContent("REM", "Remove locomotive instance from server rotation")))
+            {
+                Debug.Log("REM");
+            }
+            if (GUILayout.Button(new GUIContent("DEL", "Delete locomotive instance from server and client")))
+            {
+                if (model.serverData.count > 0)
+                {
+                    Debug.Log("Cant delete object");
+                }
+                else
+                {
+                    Debug.Log("Deleted");
+                }
+            }
+            EndHorizontal();
         }
-        EndHorizontal();
         EndVertical();
     }
 
@@ -506,7 +547,7 @@ public class EDITOR_ServerData : EditorWindow
         _carriagePrefabsBuffer = null;
         _carriagesLoaded = false;
         Thread.Sleep(2000);
-        GetCarriageCallback(TestCarriageJson, null);
+        GetItemsCallback(TestItemsJson, null);
         //EDITOR_Untility.GET("Get Carriages route", GetCarriageCallback, _authToken);
     }
 
@@ -593,16 +634,17 @@ public class EDITOR_ServerData : EditorWindow
 
     #endregion
 
-    #region Item\]
+    #region Item
+
     private void GetItemsCallback(string data, string error)
     {
         if (error == null)
         {
-            _selectedCarriageInstanceIndex = -1;
-            _itemsPrefabsBuffer = (from _obj in Resources.LoadAll("Carriages/Instances") let _locoObj = (GameObject)_obj select _locoObj).ToArray();
-            _itemsServerDataBuffer = JSON.FromJSONArray<CarriageServerType>(data);
-            _localitemData = AssociateModels(_carriageServerDataBuffer, _carriagePrefabsBuffer);
-            _carriagesLoaded = true;
+            _selectedItemInstanceIndex = -1;
+            _itemsPrefabsBuffer = (from _obj in Resources.LoadAll("Items") let _locoObj = (GameObject)_obj select _locoObj).ToArray();
+            _itemsServerDataBuffer = JSON.FromJSONArray<ItemServerType>(data);
+            _localItemsData = AssociateModels(_itemsServerDataBuffer, _itemsPrefabsBuffer);
+            _itemsLoaded = true;
         }
         else
         {
@@ -728,6 +770,19 @@ public class EDITOR_ServerData : EditorWindow
     #endregion
 }
 
+public class EDITOR_ServerDataItemsViewer : EditorWindow
+{
+    public ItemModel[] items;
+
+    private Vector2 _instancesViewPos;
+
+    private void OnGUI()
+    {
+        _instancesViewPos = BeginScrollView(_instancesViewPos, GUILayout.ExpandHeight(true), GUILayout.ExpandWidth(true));
+        EndScrollView();
+    }
+}
+
 #region Models
 
 #region Locomotive
@@ -764,6 +819,7 @@ public class LocomotiveUpgradeRecipe
 public class LocomotiveUpgradeItem
 {
     public int itemID;
+    public string itemName;
     public int count;
 }
 
