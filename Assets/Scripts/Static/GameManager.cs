@@ -36,6 +36,5 @@ public class GameManager : MonoBehaviour
             PlayerPrefs.SetInt("Language", _currentLanguage);
             PlayerPrefs.Save();
         }
-        TrainRoomLoader.LoadTrain();
     }
 }
