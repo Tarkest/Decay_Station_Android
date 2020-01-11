@@ -6,7 +6,7 @@ public class ItemObject : ScriptableObject
 {
     public Sprite icon;
 
-    public string[] names;
+    public string[] names = new string[4];
 
-    public string[] descriptions;
+    public string[] descriptions = new string[4];
 }

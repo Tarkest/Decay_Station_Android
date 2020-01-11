@@ -52,7 +52,10 @@ public class ConstantsModel
 [Serializable]
 public class ConstantsServerData : ServerData
 {
-
+    public ConstantsServerData(int id)
+    {
+        this.id = id;
+    }
 }
 
 #endregion
@@ -157,21 +160,45 @@ public class ItemModel
     }
 }
 
-[Serializable]
-public class ItemServerData : ServerData
+public class ItemData : ServerData
 {
     public int maxCount;
     public ConstantsServerData type;
     public ConstantsServerData rarity;
-    public ItemServerBufferData updateBuffer;
-    public int count;
 }
 
 [Serializable]
-public class ItemServerBufferData : ItemServerData
+public class ItemServerData : ItemData
 {
+    public ItemServerData(int id)
+    {
+        this.id = id;
+    }
 
+    public ItemServerData(string name, int maxCount, int typeId, int rarityId)
+    {
+        this.name = name;
+        this.maxCount = maxCount;
+        type = new ConstantsServerData(typeId);
+        rarity = new ConstantsServerData(rarityId);
+    }
+
+    public ItemServerData(int id, int maxCount, int typeId, int rarityId)
+    {
+        this.id = id;
+        this.maxCount = maxCount;
+        type = new ConstantsServerData(typeId);
+        rarity = new ConstantsServerData(rarityId);
+    }
+
+
+    public ItemServerBufferData updateBuffer;
+    public int count;
+    public bool inRotation;
 }
+
+[Serializable]
+public class ItemServerBufferData : ItemData {}
 
 #endregion
 

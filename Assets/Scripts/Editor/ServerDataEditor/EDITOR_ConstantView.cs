@@ -236,10 +236,12 @@ public class EDITOR_ConstantView
         _window.Focus();
         if (error == null)
         {
-            ItemsTypesData _newData = ScriptableObject.CreateInstance<ItemsTypesData>();
-            _newData.name = _newConstantName;
-            AssetDatabase.CreateAsset(_newData, "Assets/Resources/UI/UIData/ItemsTypesData/" + _newData.name + ".asset");
             _newConstantName = "";
+            ConstantsServerData _data = JSON.FromJSON<ConstantsServerData>(data);
+            ItemsTypesData _newData = ScriptableObject.CreateInstance<ItemsTypesData>();
+            _newData.name = _data.name;
+            _newData.names[0] = _data.name;
+            AssetDatabase.CreateAsset(_newData, "Assets/Resources/UI/UIData/ItemsTypesData/" + _newData.name + ".asset");
             GetItemsTypes();
         }
         else
@@ -253,10 +255,12 @@ public class EDITOR_ConstantView
         _window.Focus();
         if (error == null)
         {
-            ItemsRaritiesData _newData = ScriptableObject.CreateInstance<ItemsRaritiesData>();
-            _newData.name = _newConstantName;
-            AssetDatabase.CreateAsset(_newData, "Assets/Resources/UI/UIData/ItemsRaritiesData/" + _newData.name + ".asset");
             _newConstantName = "";
+            ConstantsServerData _data = JSON.FromJSON<ConstantsServerData>(data);
+            ItemsRaritiesData _newData = ScriptableObject.CreateInstance<ItemsRaritiesData>();
+            _newData.name = _data.name;
+            _newData.names[0] = _data.name;
+            AssetDatabase.CreateAsset(_newData, "Assets/Resources/UI/UIData/ItemsRaritiesData/" + _newData.name + ".asset");
             GetItemsRarity();
         }
         else
