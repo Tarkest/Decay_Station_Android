@@ -64,42 +64,37 @@ public class ConstantsServerData : ServerData
 
 public class LocomotiveModel
 {
-    public LocomotiveModel(LocomotiveServerType serverData, GameObject prefab)
+    public LocomotiveModel(LocomotiveServerData serverData, GameObject prefab)
     {
         this.serverData = serverData;
         this.prefab = prefab;
     }
 
-    public LocomotiveServerType serverData;
+    public LocomotiveServerData serverData;
     public GameObject prefab;
 }
 
 [Serializable]
-public class LocomotiveServerType
+public class LocomotiveServerData: ServerData
 {
-    public LocomotiveServerType(string name)
+    public LocomotiveServerData(string name)
     {
         this.name = name;
     }
 
-    public int id;
-    public string name;
+    public int maxLevel;
+    public bool inRotation;
     public int count;
-    public LocomotiveUpgradeRecipe[] upgradesRecipes;
-}
-
-[Serializable]
-public class LocomotiveUpgradeRecipe
-{
-    public LocomotiveUpgradeItem[] items;
+    public LocomotiveUpgradeItem[] upgradesRecipes;
 }
 
 [Serializable]
 public class LocomotiveUpgradeItem
 {
     public int id;
-    public int itemId;
+    public int level;
     public int count;
+    public ItemServerData item;
 }
 
 #endregion
@@ -160,6 +155,7 @@ public class ItemModel
     }
 }
 
+[Serializable]
 public class ItemData : ServerData
 {
     public int maxCount;

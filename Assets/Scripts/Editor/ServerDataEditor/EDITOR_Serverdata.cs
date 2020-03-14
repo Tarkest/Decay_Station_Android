@@ -6,7 +6,7 @@ public class EDITOR_ServerData : EditorWindow
 {
     #region Render Variables
 
-    private GUIContent[] _icons = new GUIContent[2];
+    private GUIContent[] _icons = new GUIContent[3];
     private Entities _currentTab;
     private Entities _prevTab = Entities.Empty;
     private enum Entities
@@ -14,6 +14,7 @@ public class EDITOR_ServerData : EditorWindow
         Empty = -1,
         Constants,
         Items,
+        Locomotives,
     }
 
     private string _errorMessage = "";
@@ -25,6 +26,7 @@ public class EDITOR_ServerData : EditorWindow
 
     private EDITOR_ConstantView _constantsView;
     private EDITOR_ItemsView _itemsView;
+    private EDITOR_LocomotiveView _locomotivesView;
 
     #endregion
 
@@ -59,6 +61,7 @@ public class EDITOR_ServerData : EditorWindow
     {
         _icons[0] = new GUIContent((Texture)EditorGUIUtility.Load("icons/constants.png"), "Constants");
         _icons[1] = new GUIContent((Texture)EditorGUIUtility.Load("icons/item.png"), "Items");
+        _icons[2] = new GUIContent((Texture)EditorGUIUtility.Load("icons/locomotive.png"), "Locomotives");
         //_icons[1] = new GUIContent((Texture)EditorGUIUtility.Load("icons/carriage.png"), "Carriages");
         //_icons[3] = new GUIContent((Texture)EditorGUIUtility.Load("icons/building.png"), "Buildings");
         //_icons[4] = new GUIContent((Texture)EditorGUIUtility.Load("icons/recipe.png"), "Recipes");
@@ -131,8 +134,9 @@ public class EDITOR_ServerData : EditorWindow
             case Entities.Constants:
                 if (_constantsView == null)
                 {
-                    _constantsView = new EDITOR_ConstantView(_window, _token);
+                    _locomotivesView = null;
                     _itemsView = null;
+                    _constantsView = new EDITOR_ConstantView(_window, _token);
                 }
                 _constantsView.ConstantsTypesView();
                 break;
@@ -140,10 +144,21 @@ public class EDITOR_ServerData : EditorWindow
             case Entities.Items:
                 if(_itemsView == null)
                 {
+                    _locomotivesView = null;
                     _constantsView = null;
                     _itemsView = new EDITOR_ItemsView(_window, _token);
                 }
                 _itemsView.ItemsView();
+                break;
+
+            case Entities.Locomotives:
+                if (_locomotivesView == null)
+                {
+                    _constantsView = null;
+                    _itemsView = null;
+                    _locomotivesView = new EDITOR_LocomotiveView(_window, _token);
+                }
+                _locomotivesView.LocomotivesView();
                 break;
         }
     }
