@@ -1,5 +1,5 @@
-lastUpgrade=01002
-proj.pluginVersion=0.10.02
+lastUpgrade=01007
+proj.pluginVersion=0.10.07
 proj.AppId=714383067267
 and.BundleId=com.FastFlowFolks.DecayStation
 proj.classDir=Assets%5cGoogleConstants

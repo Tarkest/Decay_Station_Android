@@ -56,9 +56,9 @@ public static class GoogleController
     /// <param name="callback">Method what wil be called when unlocking process done</param>
     public static void UnlockAchivementIncremental(string achivementId, int steps, CallBack callback)
     {
-        PlayGamesPlatform.Instance.IncrementAchievement(achivementId, steps, (bool success) => {
-            callback(success);
-        });
+        //PlayGamesPlatform.Instance.IncrementAchievement(achivementId, steps, (bool success) => {
+        //    callback(success);
+        //});
     }
 
     /// <summary>
@@ -78,10 +78,10 @@ public static class GoogleController
     /// Showing a particular leaderboard window to user
     /// </summary>
     /// <param name="leaderboardId">Leaderboard ID (only from GPGSid class)</param>
-    public static void ShowLeaderboardUI(string leaderboardId)
-    {
-        PlayGamesPlatform.Instance.ShowLeaderboardUI(leaderboardId);
-    }
+    //public static void ShowLeaderboardUI(string leaderboardId)
+    //{
+    //    PlayGamesPlatform.Instance.ShowLeaderboardUI(leaderboardId);
+    //}
 
     /// <summary>
     /// Showing achivement window to user

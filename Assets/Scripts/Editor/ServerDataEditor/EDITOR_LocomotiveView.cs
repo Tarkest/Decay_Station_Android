@@ -8,8 +8,9 @@ public class EDITOR_LocomotiveView
 {
     #region DataBuffer
 
-    private LocomotiveModel[] _locomotivesTypes;
+    private LocomotiveModel[] _locomotivesData;
     private ItemServerData[] _itemsData;
+    private LocomotiveServerData _creationBuffer;
 
     #endregion
 
@@ -47,7 +48,7 @@ public class EDITOR_LocomotiveView
         {
             if (_createMode)
             {
-
+                CreateView();
             }
             else
             {
@@ -79,18 +80,18 @@ public class EDITOR_LocomotiveView
     private void LocomotivesList()
     {
         _instancesViewPos = BeginScrollView(_instancesViewPos);
-        for (int _locomotiveIndex = 0; _locomotiveIndex < _locomotivesTypes.Length; _locomotiveIndex++)
+        for (int _locomotiveIndex = 0; _locomotiveIndex < _locomotivesData.Length; _locomotiveIndex++)
         {
             BeginVertical("box");
-            if(GUILayout.Button(_locomotivesTypes[_locomotiveIndex].serverData.name))
+            if(GUILayout.Button(_locomotivesData[_locomotiveIndex].serverData.name))
             {
                 _choosedLocomotiveIndex = _locomotiveIndex;
-                AssetDatabase.OpenAsset(_locomotivesTypes[_locomotiveIndex].prefab);
+                AssetDatabase.OpenAsset(_locomotivesData[_locomotiveIndex].prefab);
             }
             if(_locomotiveIndex == _choosedLocomotiveIndex)
             {
                 LabelField(new GUIContent("Max level", "Maximum level of carriage"));
-                _locomotivesTypes[_locomotiveIndex].serverData.maxLevel = IntSlider(_locomotivesTypes[_locomotiveIndex].serverData.maxLevel, 5, 12);
+                _locomotivesData[_locomotiveIndex].serverData.maxLevel = IntSlider(_locomotivesData[_locomotiveIndex].serverData.maxLevel, 5, 12);
                 if (GUILayout.Button("Change upgrades"))
                 {
                     _upgradeEditMode = true;
@@ -100,9 +101,10 @@ public class EDITOR_LocomotiveView
         }
         EndScrollView();
         GUILayout.Space(30);
-        if (GUILayout.Button(new GUIContent("Create new item")))
+        if (GUILayout.Button(new GUIContent("Create new locomotive")))
         {
             ClearData();
+            _creationBuffer = new LocomotiveServerData();
             _createMode = true;
         }
     }
@@ -110,7 +112,7 @@ public class EDITOR_LocomotiveView
     private void UpgradesLevelsList()
     {
         _instancesViewPos = BeginScrollView(_instancesViewPos);
-        for (int _levelIndex = 0; _levelIndex < _locomotivesTypes[_choosedLocomotiveIndex].serverData.maxLevel - 1; _levelIndex++)
+        for (int _levelIndex = 0; _levelIndex < _locomotivesData[_choosedLocomotiveIndex].serverData.maxLevel - 1; _levelIndex++)
         {
             if(GUILayout.Button("Level " + (_levelIndex + 1)))
             {
@@ -129,7 +131,7 @@ public class EDITOR_LocomotiveView
     private void UpgradesList()
     {
         LocomotiveUpgradeItem[] _upgradesBuffer = (
-            from _upgrade in _locomotivesTypes[_choosedLocomotiveIndex].serverData.upgradesRecipes
+            from _upgrade in _locomotivesData[_choosedLocomotiveIndex].serverData.upgradesRecipes
             where _upgrade.level == (_choosedUpgradeLevel + 1)
             select _upgrade).ToArray();
         _instancesViewPos = BeginScrollView(_instancesViewPos);
@@ -162,6 +164,28 @@ public class EDITOR_LocomotiveView
         }
     }
 
+    private void CreateView()
+    {
+        _instancesViewPos = BeginScrollView(_instancesViewPos);
+        LabelField("Name of new locomotive");
+        _creationBuffer.name = TextField(_creationBuffer.name);
+        LabelField("Max level");
+        _creationBuffer.maxLevel = IntSlider(_creationBuffer.maxLevel, 5, 12);
+        EndScrollView();
+        GUILayout.Space(30);
+        if(_creationBuffer.name.Length > 0)
+        {
+            if (GUILayout.Button("Create " + _creationBuffer.name))
+            {
+                CreateLocomotive();
+            }
+        }
+        if (GUILayout.Button("Back"))
+        {
+            _createMode = false;
+        }
+    }
+
     private void ClearData()
     {
 
@@ -186,7 +210,12 @@ public class EDITOR_LocomotiveView
     private void GetLocomotivesTypes()
     {
         _locomotivesTypesLoaded = false;
-        EDITOR_Utility.GET("locomotives", GetLocomotivesTypeCallback, _token);
+        EDITOR_Utility.GET("locomotives", GetLocomotivesDataCallback, _token);
+    }
+
+    private void CreateLocomotive()
+    {
+        EDITOR_Utility.POST("locomotives", JSON.ToJSON(_creationBuffer), CreateLocomotiveCallback, _token);
     }
 
     #endregion
@@ -207,12 +236,12 @@ public class EDITOR_LocomotiveView
         }
     }
 
-    private void GetLocomotivesTypeCallback(string data, string error)
+    private void GetLocomotivesDataCallback(string data, string error)
     {
         _window.Focus();
         if (error == null)
         {
-            _locomotivesTypes = EDITOR_Utility.AssociateModels<LocomotiveModel, LocomotiveServerData, GameObject>(
+            _locomotivesData = EDITOR_Utility.AssociateModels<LocomotiveModel, LocomotiveServerData, GameObject>(
                 JSON.FromJSONArray<LocomotiveServerData>(data),
                 (from _obj
                  in Resources.LoadAll("Locomotive/Instances")
@@ -221,6 +250,20 @@ public class EDITOR_LocomotiveView
                 ).ToArray()
                  );
             _locomotivesTypesLoaded = true;
+        }
+        else
+        {
+            _window.SetError(error);
+        }
+    }
+
+    private void CreateLocomotiveCallback(string data, string error)
+    {
+        _window.Focus();
+        if (error == null)
+        {
+            _createMode = false;
+            GetLocomotives();
         }
         else
         {

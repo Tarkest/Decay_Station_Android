@@ -77,6 +77,11 @@ public class LocomotiveModel
 [Serializable]
 public class LocomotiveServerData: ServerData
 {
+    public LocomotiveServerData()
+    {
+        this.name = "";
+    }
+
     public LocomotiveServerData(string name)
     {
         this.name = name;

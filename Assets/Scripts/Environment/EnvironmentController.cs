@@ -12,6 +12,11 @@ public class EnvironmentController : MonoBehaviour
     private EnvironmentSplice _splice;
     private float _trainLenght;
 
+    private void Start()
+    {
+        LoadEnvironment("New Environment", 45);
+    }
+
     /// <summary>
     /// Load environment from Assets pack
     /// </summary>
@@ -41,7 +46,7 @@ public class EnvironmentController : MonoBehaviour
     /// <param name="value">Speed change amount</param>
     public void ChangeSpeed(float value)
     {
-        currentSpeed = value;
+        currentSpeed += value;
     }
 
     /// <summary>
