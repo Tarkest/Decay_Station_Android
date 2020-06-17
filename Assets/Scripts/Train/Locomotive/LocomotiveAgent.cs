@@ -1,6 +1,7 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
-[RequireComponent(typeof(SpriteRenderer), typeof(BoxCollider2D))]
+[RequireComponent(typeof(SpriteRenderer), typeof(EdgeCollider2D))]
 public class LocomotiveAgent : TrainAgent
 {
     public int id;
@@ -9,6 +10,12 @@ public class LocomotiveAgent : TrainAgent
     public Vector3[] buildingsPositions;
     public LocomotiveForeground foreground;
     private TrainBuilding[] _currentBuildings;
+
+    public void ApplyDataFromEditor(int maxLevel)
+    {
+        Array.Resize(ref buildingsPositions, maxLevel);
+        Array.Resize(ref sprites, maxLevel - 1);
+    }
 
     /// <summary>
     /// Initialize data of locomotive agent

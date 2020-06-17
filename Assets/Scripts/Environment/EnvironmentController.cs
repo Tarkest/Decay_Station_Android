@@ -14,7 +14,8 @@ public class EnvironmentController : MonoBehaviour
 
     private void Start()
     {
-        LoadEnvironment("New Environment", 45);
+        LoadEnvironment("Test", 45);
+        currentSpeed = 0.8f;
     }
 
     /// <summary>
@@ -93,7 +94,7 @@ public class EnvironmentController : MonoBehaviour
             int _layerIndex = from > 0 ? i - 10 : i;
             if (_currentEnvironment.environmentSprites[_layerIndex].notEmpty)
             {
-                InstantiateLayer(_currentEnvironment.environmentSprites[_layerIndex], _layerIndex);
+                InstantiateLayer(_currentEnvironment.environmentSprites[_layerIndex], i);
             }
         }
     }

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 [RequireComponent(typeof(SpriteRenderer))]
 public class LocomotiveForeground : MonoBehaviour
@@ -6,6 +7,11 @@ public class LocomotiveForeground : MonoBehaviour
     public Sprite[] sprites;
 
     private SpriteRenderer _sr;
+
+    public void ApplyDataFromEditor(int maxlevel)
+    {
+        Array.Resize(ref sprites, maxlevel - 1);
+    }
 
     private void Awake()
     {

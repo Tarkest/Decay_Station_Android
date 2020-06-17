@@ -3,6 +3,7 @@ using System.Linq;
 using static UnityEditor.EditorGUILayout;
 using System;
 using UnityEditor;
+using System.Collections.Generic;
 
 public class EDITOR_LocomotiveView
 {
@@ -20,15 +21,14 @@ public class EDITOR_LocomotiveView
     #region RenderVariables
 
     private Vector2 _instancesViewPos;
-    private string _newLocomotiveName = "";
     private int _choosedLocomotiveIndex = -1;
     private int _choosedUpgradeLevel = -1;
-    private bool _locomotivesTypesLoaded = false;
+    private int _choosedUpgradeIndex = -1;
+    private bool _locomotivesDataLoaded = false;
     private bool _itemsDataLoaded = false;
     private bool _upgradeEditMode = false;
     private bool _upgradeLevelChoosed = false;
     private bool _itemChoosingMode = false;
-    private bool _itemAddingMode = false;
     private bool _createMode = false;
 
     #endregion
@@ -44,11 +44,32 @@ public class EDITOR_LocomotiveView
 
     public void LocomotivesView()
     {
-        if (_locomotivesTypesLoaded && _itemsDataLoaded)
+        if (_locomotivesDataLoaded && _itemsDataLoaded)
         {
             if (_createMode)
             {
-                CreateView();
+                if(_upgradeEditMode)
+                {
+                    if(_upgradeLevelChoosed)
+                    {
+                        if (_itemChoosingMode)
+                        {
+                            ItemChooseView();
+                        }
+                        else
+                        {
+                            UpgradesList();
+                        }
+                    }
+                    else
+                    {
+                        UpgradesLevelsList();
+                    }
+                }
+                else
+                {
+                    CreateView();
+                }
             }
             else
             {
@@ -56,7 +77,14 @@ public class EDITOR_LocomotiveView
                 {
                     if(_upgradeLevelChoosed)
                     {
-                        UpgradesList();
+                        if(_itemChoosingMode)
+                        {
+                            ItemChooseView();
+                        }
+                        else
+                        {
+                            UpgradesList();
+                        }
                     }
                     else
                     {
@@ -83,15 +111,25 @@ public class EDITOR_LocomotiveView
         for (int _locomotiveIndex = 0; _locomotiveIndex < _locomotivesData.Length; _locomotiveIndex++)
         {
             BeginVertical("box");
-            if(GUILayout.Button(_locomotivesData[_locomotiveIndex].serverData.name))
+            if (GUILayout.Button(_locomotivesData[_locomotiveIndex].serverData.name))
             {
                 _choosedLocomotiveIndex = _locomotiveIndex;
                 AssetDatabase.OpenAsset(_locomotivesData[_locomotiveIndex].prefab);
             }
-            if(_locomotiveIndex == _choosedLocomotiveIndex)
+            if (_locomotiveIndex == _choosedLocomotiveIndex)
             {
                 LabelField(new GUIContent("Max level", "Maximum level of carriage"));
-                _locomotivesData[_locomotiveIndex].serverData.maxLevel = IntSlider(_locomotivesData[_locomotiveIndex].serverData.maxLevel, 5, 12);
+                int _currentMaxLevel = _locomotivesData[_locomotiveIndex].serverData.maxLevel;
+                int _newMaxLevel = IntSlider(_currentMaxLevel, 5, 12);
+                if (_currentMaxLevel != _newMaxLevel)
+                {
+                    Array.Resize(ref _locomotivesData[_locomotiveIndex].serverData.upgradesRecipes, _newMaxLevel);
+                    for (int _addedIndex = 0; _addedIndex < _newMaxLevel - _currentMaxLevel; _addedIndex++)
+                    {
+                        _locomotivesData[_locomotiveIndex].serverData.upgradesRecipes[_currentMaxLevel + _addedIndex] = new LocomotiveUpgradeItem(_currentMaxLevel + _addedIndex);
+                    }
+                }
+                _locomotivesData[_locomotiveIndex].serverData.maxLevel = _newMaxLevel;
                 if (GUILayout.Button("Change upgrades"))
                 {
                     _upgradeEditMode = true;
@@ -112,12 +150,26 @@ public class EDITOR_LocomotiveView
     private void UpgradesLevelsList()
     {
         _instancesViewPos = BeginScrollView(_instancesViewPos);
-        for (int _levelIndex = 0; _levelIndex < _locomotivesData[_choosedLocomotiveIndex].serverData.maxLevel - 1; _levelIndex++)
+        if(_createMode)
         {
-            if(GUILayout.Button("Level " + (_levelIndex + 1)))
+            for (int _levelIndex = 0; _levelIndex < _creationBuffer.maxLevel - 1; _levelIndex++)
             {
-                _choosedUpgradeLevel = _levelIndex;
-                _upgradeLevelChoosed = true;
+                if (GUILayout.Button("Level " + (_levelIndex + 1)))
+                {
+                    _choosedUpgradeLevel = _levelIndex;
+                    _upgradeLevelChoosed = true;
+                }
+            }
+        }
+        else
+        {
+            for (int _levelIndex = 0; _levelIndex < _locomotivesData[_choosedLocomotiveIndex].serverData.maxLevel - 1; _levelIndex++)
+            {
+                if (GUILayout.Button("Level " + (_levelIndex + 1)))
+                {
+                    _choosedUpgradeLevel = _levelIndex;
+                    _upgradeLevelChoosed = true;
+                }
             }
         }
         EndScrollView();
@@ -130,37 +182,85 @@ public class EDITOR_LocomotiveView
 
     private void UpgradesList()
     {
-        LocomotiveUpgradeItem[] _upgradesBuffer = (
-            from _upgrade in _locomotivesData[_choosedLocomotiveIndex].serverData.upgradesRecipes
-            where _upgrade.level == (_choosedUpgradeLevel + 1)
-            select _upgrade).ToArray();
+        LocomotiveUpgradeItem[] _upgradesBuffer;
         _instancesViewPos = BeginScrollView(_instancesViewPos);
+        if (_createMode)
+        {
+            if(_creationBuffer.upgradesRecipes == null)
+            {
+                _creationBuffer.upgradesRecipes = new LocomotiveUpgradeItem[0];
+            }
+            _upgradesBuffer = (
+                from _upgrade in _creationBuffer.upgradesRecipes
+                where _upgrade.level == (_choosedUpgradeLevel + 1)
+                select _upgrade)
+            .ToArray();
+        }
+        else
+        {
+            _upgradesBuffer = (
+                from _upgrade in _locomotivesData[_choosedLocomotiveIndex].serverData.upgradesRecipes
+                where _upgrade.level == (_choosedUpgradeLevel + 1)
+                select _upgrade)
+            .ToArray();
+        }
         for (int _upgradeIndex = 0; _upgradeIndex < _upgradesBuffer.Length; _upgradeIndex++)
         {
             BeginVertical("box");
-            BeginHorizontal();
-            if (GUILayout.Button(_upgradesBuffer[_upgradeIndex].item.name))
+            if (GUILayout.Button(_upgradesBuffer[_upgradeIndex].item != null ? _upgradesBuffer[_upgradeIndex].item.name : "Not choosed"))
             {
                 _itemChoosingMode = true;
+                if(_createMode)
+                {
+                    _choosedUpgradeIndex = Array.IndexOf(_creationBuffer.upgradesRecipes, _upgradesBuffer[_upgradeIndex]);
+                }
+                else
+                {
+                    _choosedUpgradeIndex = Array.IndexOf(_locomotivesData[_choosedLocomotiveIndex].serverData.upgradesRecipes, _upgradesBuffer[_upgradeIndex]);
+                }
             }
-            if(GUILayout.Button("X"))
+            if(_upgradesBuffer[_upgradeIndex].item != null)
             {
-
+                LabelField(new GUIContent("Count", "Count of items required for upgrade"));
+                _upgradesBuffer[_upgradeIndex].count = IntSlider(_upgradesBuffer[_upgradeIndex].count, 1, _upgradesBuffer[_upgradeIndex].item.maxCount);
             }
-            EndHorizontal();
-            LabelField(new GUIContent("Count", "Count of items required for upgrade"));
-            _upgradesBuffer[_upgradeIndex].count = IntSlider(_upgradesBuffer[_upgradeIndex].count, 1, _upgradesBuffer[_upgradeIndex].item.maxCount);
             EndVertical();
         }
-        if(GUILayout.Button(new GUIContent("Add Item", "Add upgrade item to this level")))
+        if (GUILayout.Button(new GUIContent("+", "Add item")))
         {
-
+            if (_createMode)
+            {
+                Array.Resize(ref _creationBuffer.upgradesRecipes, _creationBuffer.upgradesRecipes.Length + 1);
+                _creationBuffer.upgradesRecipes[_creationBuffer.upgradesRecipes.Length - 1] = new LocomotiveUpgradeItem(_choosedUpgradeLevel + 1);
+            }
         }
         EndScrollView();
         GUILayout.Space(30);
         if (GUILayout.Button("Back"))
         {
             _upgradeLevelChoosed = false;
+        }
+    }
+
+    private void ItemChooseView()
+    {
+        _instancesViewPos = BeginScrollView(_instancesViewPos);
+        for (int _itemIndex = 0; _itemIndex < _itemsData.Length; _itemIndex++)
+        {
+            if(GUILayout.Button(_itemsData[_itemIndex].name))
+            {
+                if(_createMode)
+                {
+                    _creationBuffer.upgradesRecipes[_choosedUpgradeIndex].item = _itemsData[_itemIndex];
+                    _itemChoosingMode = false;
+                }
+            }
+        }
+        EndScrollView();
+        GUILayout.Space(30);
+        if (GUILayout.Button("Cancel"))
+        {
+            _itemChoosingMode = false;
         }
     }
 
@@ -171,6 +271,10 @@ public class EDITOR_LocomotiveView
         _creationBuffer.name = TextField(_creationBuffer.name);
         LabelField("Max level");
         _creationBuffer.maxLevel = IntSlider(_creationBuffer.maxLevel, 5, 12);
+        if(GUILayout.Button("Edit upgrades"))
+        {
+            _upgradeEditMode = true;
+        }
         EndScrollView();
         GUILayout.Space(30);
         if(_creationBuffer.name.Length > 0)
@@ -188,7 +292,14 @@ public class EDITOR_LocomotiveView
 
     private void ClearData()
     {
-
+        _choosedLocomotiveIndex = -1;
+        _choosedUpgradeLevel = -1;
+        _choosedUpgradeIndex = -1;
+        _upgradeEditMode = false;
+        _upgradeLevelChoosed = false;
+        _itemChoosingMode = false;
+        _createMode = false;
+        _creationBuffer = null;
     }
 
     #endregion
@@ -209,7 +320,7 @@ public class EDITOR_LocomotiveView
 
     private void GetLocomotivesTypes()
     {
-        _locomotivesTypesLoaded = false;
+        _locomotivesDataLoaded = false;
         EDITOR_Utility.GET("locomotives", GetLocomotivesDataCallback, _token);
     }
 
@@ -249,7 +360,7 @@ public class EDITOR_LocomotiveView
                  select _typeObject
                 ).ToArray()
                  );
-            _locomotivesTypesLoaded = true;
+            _locomotivesDataLoaded = true;
         }
         else
         {
@@ -262,7 +373,23 @@ public class EDITOR_LocomotiveView
         _window.Focus();
         if (error == null)
         {
-            _createMode = false;
+            ClearData();
+            LocomotiveServerData _data = JSON.FromJSON<LocomotiveServerData>(data);
+            GameObject _newLocomotive = new GameObject(_data.name, typeof(SpriteRenderer), typeof(EdgeCollider2D), typeof(LocomotiveAgent));
+            GameObject _foreground = new GameObject("Foreground", typeof(SpriteRenderer), typeof(LocomotiveForeground));
+            GameObject _wheels1 = new GameObject("Wheel 1", typeof(SpriteRenderer), typeof(Animator), typeof(TrainWheels));
+            GameObject _wheels2 = new GameObject("Wheel 2", typeof(SpriteRenderer), typeof(Animator), typeof(TrainWheels));
+            _foreground.transform.SetParent(_newLocomotive.transform);
+            _wheels1.transform.SetParent(_newLocomotive.transform);
+            _wheels2.transform.SetParent(_newLocomotive.transform);
+            _foreground.transform.SetSiblingIndex(0);
+            _wheels1.transform.SetSiblingIndex(1);
+            _wheels2.transform.SetSiblingIndex(2);
+            LocomotiveAgent _newLocomotiveAgent = _newLocomotive.GetComponent<LocomotiveAgent>();
+            _newLocomotiveAgent.ApplyDataFromEditor(_data.maxLevel);
+            _newLocomotiveAgent.wheels = new TrainWheels[] { _wheels1.GetComponent<TrainWheels>(), _wheels2.GetComponent<TrainWheels>() };
+            PrefabUtility.SaveAsPrefabAsset(_newLocomotive, "Assets/Resources/Locomotive/Instances/" + _newLocomotive.name + ".prefab");
+            UnityEngine.Object.DestroyImmediate(_newLocomotive);
             GetLocomotives();
         }
         else
