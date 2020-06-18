@@ -11,7 +11,8 @@ public class INSPEC_EnvironmentData : Editor
     SerializedProperty _environmentRails;
     SerializedProperty _environmentRailsForeground;
     SerializedProperty _environmentSplice;
-    AnimBool[] _showArray = new AnimBool[25];
+    SerializedProperty _names;
+    AnimBool[] _showArray = new AnimBool[26];
 
     private void OnEnable()
     {
@@ -20,7 +21,8 @@ public class INSPEC_EnvironmentData : Editor
         _environmentRails = serializedObject.FindProperty("rails");
         _environmentRailsForeground = serializedObject.FindProperty("railsForeground");
         _environmentSplice = serializedObject.FindProperty("environmentSplice");
-        for (int i = 0; i < 25; i++)
+        _names = serializedObject.FindProperty("names");
+        for (int i = 0; i < 26; i++)
         {
             _showArray[i] = new AnimBool(false);
             _showArray[i].valueChanged.AddListener(Repaint);
@@ -30,8 +32,26 @@ public class INSPEC_EnvironmentData : Editor
     public override void OnInspectorGUI()
     {
         serializedObject.Update();
+        _showArray[0].target = BeginFoldoutHeaderGroup(_showArray[0].target, "Names");
+        if (BeginFadeGroup(_showArray[0].faded))
+        {
+            LabelField("English");
+            _names.GetArrayElementAtIndex(0).stringValue = TextArea(_names.GetArrayElementAtIndex(0).stringValue);
+            Space();
+            LabelField("Russian");
+            _names.GetArrayElementAtIndex(1).stringValue = TextArea(_names.GetArrayElementAtIndex(1).stringValue);
+            Space();
+            LabelField("German");
+            _names.GetArrayElementAtIndex(2).stringValue = TextArea(_names.GetArrayElementAtIndex(2).stringValue);
+            Space();
+            LabelField("French");
+            _names.GetArrayElementAtIndex(3).stringValue = TextArea(_names.GetArrayElementAtIndex(3).stringValue);
+        }
+        EndFadeGroup();
+        EndFoldoutHeaderGroup();
+        Space();
         LabelField(new GUIContent("Background"));
-        for (int i = 0; i < 10; i++)
+        for (int i = 1; i < 11; i++)
         {
             _showArray[i].target = BeginFoldoutHeaderGroup(_showArray[i].target, $"{i + 1} layer sprites");
             if (BeginFadeGroup(_showArray[i].faded))
@@ -69,8 +89,8 @@ public class INSPEC_EnvironmentData : Editor
         }
         Space();
         LabelField(new GUIContent("Rails"));
-        _showArray[10].target = BeginFoldoutHeaderGroup(_showArray[10].target, "Rails Background");
-        if (BeginFadeGroup(_showArray[10].faded))
+        _showArray[11].target = BeginFoldoutHeaderGroup(_showArray[11].target, "Rails Background");
+        if (BeginFadeGroup(_showArray[11].faded))
         {
             BeginVertical("box");
             for (int sprI = 0; sprI < _environmentRailsBackground.FindPropertyRelative("variation").arraySize; sprI++)
@@ -92,8 +112,8 @@ public class INSPEC_EnvironmentData : Editor
         }
         EndFadeGroup();
         EndFoldoutHeaderGroup();
-        _showArray[11].target = BeginFoldoutHeaderGroup(_showArray[11].target, "Rails");
-        if (BeginFadeGroup(_showArray[11].faded))
+        _showArray[12].target = BeginFoldoutHeaderGroup(_showArray[12].target, "Rails");
+        if (BeginFadeGroup(_showArray[12].faded))
         {
             BeginVertical("box");
             for (int sprI = 0; sprI < _environmentRails.FindPropertyRelative("variation").arraySize; sprI++)
@@ -115,8 +135,8 @@ public class INSPEC_EnvironmentData : Editor
         }
         EndFadeGroup();
         EndFoldoutHeaderGroup();
-        _showArray[12].target = BeginFoldoutHeaderGroup(_showArray[12].target, "Rails Foreground");
-        if (BeginFadeGroup(_showArray[12].faded))
+        _showArray[13].target = BeginFoldoutHeaderGroup(_showArray[13].target, "Rails Foreground");
+        if (BeginFadeGroup(_showArray[13].faded))
         {
             BeginVertical("box");
             for (int sprI = 0; sprI < _environmentRailsForeground.FindPropertyRelative("variation").arraySize; sprI++)
@@ -140,7 +160,7 @@ public class INSPEC_EnvironmentData : Editor
         EndFoldoutHeaderGroup();
         Space();
         LabelField(new GUIContent("Foreground"));
-        for (int i = 10; i < 20; i++)
+        for (int i = 11; i < 21; i++)
         {
             _showArray[i + 3].target = BeginFoldoutHeaderGroup(_showArray[i + 3].target, $"{i - 9} layer sprites");
             if (BeginFadeGroup(_showArray[i + 3].faded))
@@ -177,7 +197,7 @@ public class INSPEC_EnvironmentData : Editor
             EndFoldoutHeaderGroup();
         }
         Space();
-        _showArray[24].target = BeginFoldoutHeaderGroup(_showArray[24].target, $"Splice");
+        _showArray[25].target = BeginFoldoutHeaderGroup(_showArray[25].target, $"Splice");
         if (BeginFadeGroup(_showArray[24].faded))
         {
             BeginVertical("box");

@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Environment", menuName = "Environment/Environment Data")]
 public class EnvironmentData : ScriptableObject
 {
+    public string[] names = new string[4];
+
     public EnvironmentLayerData[] environmentSprites = new EnvironmentLayerData[20];
 
     public EnvironmentLayerData rails;
