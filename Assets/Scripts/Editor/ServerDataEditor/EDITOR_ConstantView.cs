@@ -181,7 +181,7 @@ public class EDITOR_ConstantView
 
     private void GetBuildingsTypes()
     {
-        _environmentsLoaded = false;
+        _buildingTypesLoaded = false;
         EDITOR_Utility.GET("constants/buildingstypes", GetBuildingTypesCallback, _token);
     }
 
