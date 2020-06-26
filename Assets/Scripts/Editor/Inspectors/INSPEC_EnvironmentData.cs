@@ -53,7 +53,7 @@ public class INSPEC_EnvironmentData : Editor
         LabelField(new GUIContent("Background"));
         for (int i = 1; i < 11; i++)
         {
-            _showArray[i].target = BeginFoldoutHeaderGroup(_showArray[i].target, $"{i + 1} layer sprites");
+            _showArray[i].target = BeginFoldoutHeaderGroup(_showArray[i].target, $"{i} layer sprites");
             if (BeginFadeGroup(_showArray[i].faded))
             {
                 BeginVertical("box");
@@ -162,7 +162,7 @@ public class INSPEC_EnvironmentData : Editor
         LabelField(new GUIContent("Foreground"));
         for (int i = 11; i < 21; i++)
         {
-            _showArray[i + 3].target = BeginFoldoutHeaderGroup(_showArray[i + 3].target, $"{i - 9} layer sprites");
+            _showArray[i + 3].target = BeginFoldoutHeaderGroup(_showArray[i + 3].target, $"{i - 10} layer sprites");
             if (BeginFadeGroup(_showArray[i + 3].faded))
             {
                 BeginVertical("box");
