@@ -29,6 +29,7 @@ public class EDITOR_LocomotiveView
     private bool _upgradeEditMode = false;
     private bool _upgradeLevelChoosed = false;
     private bool _itemChoosingMode = false;
+    private bool _buildingSlotsEdit = false;
     private bool _createMode = false;
 
     #endregion
@@ -264,6 +265,21 @@ public class EDITOR_LocomotiveView
         }
     }
 
+    private void BuildingSlotsView()
+    {
+        _instancesViewPos = BeginScrollView(_instancesViewPos);
+        for (int _buildingSlotsIndex = 0; _buildingSlotsIndex < _itemsData.Length; _buildingSlotsIndex++)
+        {
+
+        }
+        EndScrollView();
+        GUILayout.Space(30);
+        if (GUILayout.Button("Back"))
+        {
+            _buildingSlotsEdit = false;
+        }
+    }
+
     private void CreateView()
     {
         _instancesViewPos = BeginScrollView(_instancesViewPos);
@@ -274,6 +290,10 @@ public class EDITOR_LocomotiveView
         if(GUILayout.Button("Edit upgrades"))
         {
             _upgradeEditMode = true;
+        }
+        if (GUILayout.Button("Edit buildings slots"))
+        {
+            _buildingSlotsEdit = true;
         }
         EndScrollView();
         GUILayout.Space(30);

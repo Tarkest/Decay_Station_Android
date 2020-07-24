@@ -45,16 +45,16 @@ public class INSPEC_Item : Editor
         if (BeginFadeGroup(descriptionsOpened.faded))
         {
             LabelField("English");
-            descriptions.GetArrayElementAtIndex(0).stringValue = TextArea(names.GetArrayElementAtIndex(0).stringValue);
+            descriptions.GetArrayElementAtIndex(0).stringValue = TextArea(descriptions.GetArrayElementAtIndex(0).stringValue);
             Space();
             LabelField("Russian");
-            descriptions.GetArrayElementAtIndex(1).stringValue = TextArea(names.GetArrayElementAtIndex(1).stringValue);
+            descriptions.GetArrayElementAtIndex(1).stringValue = TextArea(descriptions.GetArrayElementAtIndex(1).stringValue);
             Space();
             LabelField("German");
-            descriptions.GetArrayElementAtIndex(2).stringValue = TextArea(names.GetArrayElementAtIndex(2).stringValue);
+            descriptions.GetArrayElementAtIndex(2).stringValue = TextArea(descriptions.GetArrayElementAtIndex(2).stringValue);
             Space();
             LabelField("French");
-            descriptions.GetArrayElementAtIndex(3).stringValue = TextArea(names.GetArrayElementAtIndex(3).stringValue);
+            descriptions.GetArrayElementAtIndex(3).stringValue = TextArea(descriptions.GetArrayElementAtIndex(3).stringValue);
         }
         EndFadeGroup();
         EndFoldoutHeaderGroup();

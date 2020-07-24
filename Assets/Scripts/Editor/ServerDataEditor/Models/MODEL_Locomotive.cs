@@ -30,6 +30,7 @@ public class LocomotiveServerData : ServerData
     public bool inRotation;
     public int count;
     public LocomotiveUpgradeItem[] upgradesRecipes;
+    public BuildingSlotData[] buildingSlots;
 }
 
 [Serializable]
@@ -45,4 +46,18 @@ public class LocomotiveUpgradeItem
     public int level;
     public int count;
     public ItemServerData item;
+}
+
+[Serializable]
+public class BuildingSlotData
+{
+    public BuildingSlotData()
+    {
+
+    }
+
+    public int id;
+    public int level;
+    public int index;
+    public ConstantsServerData buildingType;
 }
