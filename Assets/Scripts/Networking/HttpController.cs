@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -8,6 +9,7 @@ public class HttpController : MonoBehaviour
 {
     public static HttpController instance; 
     private static Queue<IEnumerator> queue = new Queue<IEnumerator>();
+    private string authToken;
 
     private void Awake()
     {
@@ -20,6 +22,11 @@ public class HttpController : MonoBehaviour
         {
             StartCoroutine(queue.Dequeue());
         }
+    }
+
+    public void SetAuthToken(string token)
+    {
+        authToken = "Bearer " + token;
     }
 
     public void GET(string path, Action<string, string> callback)
@@ -45,26 +52,16 @@ public class HttpController : MonoBehaviour
     public IEnumerator GETRequest(string path, Action<string, string> callback) {
         using (UnityWebRequest request = UnityWebRequest.Get(StaticClasses.SERVER_ADRESS + "/" + path))
         {
-            if (PlayerPrefs.HasKey("accountKey"))
+            if(authToken != null)
             {
-                request.SetRequestHeader("auth", PlayerPrefs.GetString("accountKey"));
-                if (PlayerPrefs.HasKey("accountGoogleKey"))
-                {
-                    request.SetRequestHeader("authGoogle", PlayerPrefs.GetString("accountGoogleKey"));
-                }
-            }
-            else
-            {
-                PlayerPrefs.SetString("accountKey", GenerateAccountKey());
-                request.SetRequestHeader("auth", PlayerPrefs.GetString("accountKey"));
-                PlayerPrefs.Save();
-                if (PlayerPrefs.HasKey("accountGoogleKey"))
-                {
-                    request.SetRequestHeader("authGoogle", PlayerPrefs.GetString("accountGoogleKey"));
-                }
+                request.SetRequestHeader("Authorization", authToken);
             }
             yield return request.SendWebRequest();
 
+            while (!request.isDone)
+            {
+                yield return null;
+            }
             if (request.isNetworkError)
             {
                 callback(null, request.error);
@@ -84,10 +81,20 @@ public class HttpController : MonoBehaviour
     {
         using (UnityWebRequest request = UnityWebRequest.Post(StaticClasses.SERVER_ADRESS + "/" + path, json))
         {
-            if (PlayerPrefs.GetString("accountKey") != "")
-                request.SetRequestHeader("auth", PlayerPrefs.GetString("accountKey"));
+            byte[] bytes = GetBytes(json);
+            UploadHandlerRaw uH = new UploadHandlerRaw(bytes);
+            request.uploadHandler = uH;
+            request.SetRequestHeader("Content-Type", "application/json");
+            if (authToken != null)
+            {
+                request.SetRequestHeader("Authorization", authToken);
+            }
             yield return request.SendWebRequest();
 
+            while (!request.isDone)
+            {
+                yield return null;
+            }
             if (request.isNetworkError)
             {
                 callback(null, request.error);
@@ -107,10 +114,20 @@ public class HttpController : MonoBehaviour
     {
         using (UnityWebRequest request = UnityWebRequest.Put(StaticClasses.SERVER_ADRESS + "/" + path, json))
         {
-            if (PlayerPrefs.GetString("accountKey") != "")
-                request.SetRequestHeader("auth", PlayerPrefs.GetString("accountKey"));
+            byte[] bytes = GetBytes(json);
+            UploadHandlerRaw uH = new UploadHandlerRaw(bytes);
+            request.uploadHandler = uH;
+            request.SetRequestHeader("Content-Type", "application/json");
+            if (authToken != null)
+            {
+                request.SetRequestHeader("Authorization", authToken);
+            }
             yield return request.SendWebRequest();
 
+            while (!request.isDone)
+            {
+                yield return null;
+            }
             if (request.isNetworkError)
             {
                 callback(null, request.error);
@@ -130,10 +147,16 @@ public class HttpController : MonoBehaviour
     {
         using (UnityWebRequest request = UnityWebRequest.Delete(StaticClasses.SERVER_ADRESS + "/" + path))
         {
-            if (PlayerPrefs.GetString("accountKey") != "")
-                request.SetRequestHeader("auth", PlayerPrefs.GetString("accountKey"));
+            if (authToken != null)
+            {
+                request.SetRequestHeader("Authorization", authToken);
+            }
             yield return request.SendWebRequest();
 
+            while (!request.isDone)
+            {
+                yield return null;
+            }
             if (request.isNetworkError)
             {
                 callback(null, request.error);
@@ -149,8 +172,37 @@ public class HttpController : MonoBehaviour
         }
     }
 
-    private string GenerateAccountKey()
+    UnityWebRequest CreateUnityWebRequest(string url, string param, string method)
     {
-        return Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Replace("=", "").Replace("+", "").Replace("/", "");
+        UnityWebRequest requestU = new UnityWebRequest(url, method);
+        byte[] bytes = GetBytes(param);
+        UploadHandlerRaw uH = new UploadHandlerRaw(bytes);
+        requestU.uploadHandler = uH;
+        requestU.SetRequestHeader("Content-Type", "application/json");
+        CastleDownloadHandler dH = new CastleDownloadHandler();
+        requestU.downloadHandler = dH;
+        return requestU;
+    }
+
+    protected static byte[] GetBytes(string str)
+    {
+        byte[] bytes = Encoding.UTF8.GetBytes(str);
+        return bytes;
+    }
+}
+
+
+class CastleDownloadHandler : DownloadHandlerScript
+{
+    public delegate void Finished();
+    public event Finished onFinished;
+
+    protected override void CompleteContent()
+    {
+        base.CompleteContent();
+        if (onFinished != null)
+        {
+            onFinished();
+        }
     }
 }

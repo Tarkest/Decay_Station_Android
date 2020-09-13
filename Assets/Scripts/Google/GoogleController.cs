@@ -14,10 +14,8 @@ public static class GoogleController
     public static void Authentificate(CallBack callback)
     {
         PlayGamesClientConfiguration config = new PlayGamesClientConfiguration.Builder().Build();
-
         PlayGamesPlatform.InitializeInstance(config);
         PlayGamesPlatform.Activate();
-
         Social.localUser.Authenticate((bool success) => {
             callback(success);
         });
