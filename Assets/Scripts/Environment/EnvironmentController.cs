@@ -12,12 +12,6 @@ public class EnvironmentController : MonoBehaviour
     private EnvironmentSplice _splice;
     private float _trainLenght;
 
-    private void Start()
-    {
-        LoadEnvironment("Test", 45);
-        currentSpeed = 0.8f;
-    }
-
     /// <summary>
     /// Load environment from Assets pack
     /// </summary>

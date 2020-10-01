@@ -169,7 +169,7 @@ public class EDITOR_ServerData : EditorWindow
 
     private void Login(string login, string password)
     {
-        EDITOR_Utility.POST("login", JSON.ToJSON(new AccountData(login, password)), LoginCallback, _token);
+        EDITOR_Utility.POST("login", JSON.ToJSON(new AccountVariables(login, password)), LoginCallback, _token);
     }
 
     #endregion

@@ -1,24 +1,32 @@
 ﻿using GooglePlayGames;
 using GooglePlayGames.BasicApi;
+using System;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public static class GoogleController
 {
     public delegate void CallBack(bool success);
 
+    public static void InitializeGoogleController()
+    {
+        PlayGamesClientConfiguration config = new PlayGamesClientConfiguration.Builder().Build();
+        PlayGamesPlatform.InitializeInstance(config);
+        PlayGamesPlatform.Activate();
+    }
+
     /// <summary>
     /// Fetch Google API for user information and inialize account data
     /// (Should be done successfuly for using user id and Google Play services)
     /// </summary>
     /// <param name="callback">Method what wil be called when authentification process done</param>
-    public static void Authentificate(CallBack callback)
+    public static Task<bool> Authentificate()
     {
-        PlayGamesClientConfiguration config = new PlayGamesClientConfiguration.Builder().Build();
-        PlayGamesPlatform.InitializeInstance(config);
-        PlayGamesPlatform.Activate();
+        var task = new TaskCompletionSource<bool>();
         Social.localUser.Authenticate((bool success) => {
-            callback(success);
+            task.SetResult(success);
         });
+        return task.Task;
     }
 
     /// <summary>
@@ -27,11 +35,13 @@ public static class GoogleController
     /// </summary>
     /// <param name="achivementId">Achivement ID (only from GPGSid class)</param>
     /// <param name="callback">Method what wil be called when unlocking process done</param>
-    public static void UnlockAchivement(string achivementId, CallBack callback)
+    public static Task<bool> UnlockAchivement(string achivementId, CallBack callback)
     {
+        var task = new TaskCompletionSource<bool>();
         Social.ReportProgress(achivementId, 100.0f, (bool success) => {
-            callback(success);
+            task.SetResult(success);
         });
+        return task.Task;
     }
 
     /// <summary>
@@ -39,11 +49,13 @@ public static class GoogleController
     /// </summary>
     /// <param name="achivementId">Achivement ID (only from GPGSid class)</param>
     /// <param name="callback">Method what wil be called when unlocking process done</param>
-    public static void RevealAchivement(string achivementId, CallBack callback)
+    public static Task<bool> RevealAchivement(string achivementId, CallBack callback)
     {
+        var task = new TaskCompletionSource<bool>();
         Social.ReportProgress(achivementId, 0.0f, (bool success) =>{
             callback(success);
         });
+        return task.Task;
     }
 
     /// <summary>

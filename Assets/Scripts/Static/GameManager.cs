@@ -1,17 +1,17 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    public static string authToken;
-    private static bool _authentificationSuccess = false;
     public static string nickname;
     public static int accountLevel;
     public static int accountExperience;
-    public Text text;
+    public Slider loadingBar;
+    public GameObject loadingScreen;
 
-    public static HttpController networkController;
+    public static GameManager instance;
+    public static LoadingManager loadingManager;
 
     public static int language
     {
@@ -29,11 +29,12 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         DontDestroyOnLoad(this);
+        instance = this;
+        loadingScreen.gameObject.SetActive(true);
     }
 
-    void Start()
+    async void Start()
     {
-        networkController = HttpController.instance;
         if (PlayerPrefs.GetInt("Language", -1) == -1)
         {
             int _currentLanguage = 0;
@@ -44,45 +45,27 @@ public class GameManager : MonoBehaviour
             PlayerPrefs.SetInt("Language", _currentLanguage);
             PlayerPrefs.Save();
         }
-        GoogleController.Authentificate((success) => {
-            _authentificationSuccess = success;
-            text.text = "Begin login request";
-            var data = new AccountDataTest(Social.localUser.id);
-            Debug.Log(data);
-            var id = JSON.ToJSON(data);
-            Debug.Log(id);
-            text.text = id;
-            networkController.POST("login", id, (loginData, loginError) => { 
-                if(loginError != "")
-                {
-                    text.text = loginError;
-                }
-                else
-                {
-                    text.text = "Token: " + loginData;
-                    networkController.SetAuthToken(loginData);
-                    networkController.GET("getAccountInfo", (accountData, accountError) => {
-                        if(accountError != "")
-                        {
-                        }
-                        else
-                        {
-                            text.text = accountData;
-                        }
-                    });
-                }
-            }); 
-        });
+        if(await GoogleController.Authentificate())
+        {
+            HttpController.SetAuthToken(await HttpController.POST<string>("login", JSON.ToJSON(new LoginVariables("test"))));
+            LoadMainScene();
+        }
     }
-}
 
-[Serializable]
-public class AccountDataTest
-{
-    public string googleId;
-
-    public AccountDataTest(string id)
+    private void Update()
     {
-        googleId = id;
+        if(loadingManager != null)
+        {
+            loadingBar.value = loadingManager.progress / 100f;
+        }
+    }
+
+    private async void LoadMainScene()
+    {
+        var _accountData = await HttpController.GET<AccountData>("getAccountInfo");
+        await SceneManager.LoadSceneAsync((int)SceneIndexes.MAIN, LoadSceneMode.Additive);
+        SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex((int)SceneIndexes.MAIN));
+        loadingManager = LoadingManager.instance;
+        StartCoroutine(loadingManager.LoadTrainCoroutine(_accountData));
     }
 }

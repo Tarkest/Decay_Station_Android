@@ -1,4 +1,10 @@
 ﻿public static class StaticClasses
 {
-    public const string SERVER_ADRESS = "https://decay-station-api-dev.herokuapp.com/api";
+    public const string SERVER_ADRESS = "localhost:3000/api/";
+}
+
+public enum SceneIndexes
+{
+    MANAGER,
+    MAIN,
 }
